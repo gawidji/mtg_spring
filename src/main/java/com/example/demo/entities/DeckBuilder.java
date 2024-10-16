@@ -3,6 +3,8 @@ package com.example.demo.entities;
 import java.util.Date;
 import java.util.List;
 
+import com.example.demo.enums.UserRole;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -54,8 +56,8 @@ public class DeckBuilder {
 	@Column(name ="avatar", length = 500 )
 	private String avatar;
 	
-	@Column(name = "admin", nullable = false)
-	private Boolean isAdmin;
+	@Column(name = "role", nullable = false)
+	private String role;
 	
 	@OneToMany(mappedBy = "deckBuilder", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Deck> decks;

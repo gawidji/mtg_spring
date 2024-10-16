@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.DeckBuilder;
+import com.example.demo.enums.UserRole;
 import com.example.demo.repositories.DeckBuilderRepository;
 
 @Service
@@ -18,14 +19,15 @@ public class DeckBuilderService implements IDeckBuilderService  {
 
 	@Override
 	public DeckBuilder inscription(DeckBuilder deckBuilder) {
-		DeckBuilder db = DeckBuilder.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(deckBuilder.getPassword()).avatar(deckBuilder.getAvatar()).isAdmin(false).build();
+		DeckBuilder db = DeckBuilder.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(deckBuilder.getPassword()).avatar(deckBuilder.getAvatar()).role(UserRole.USER.toString())
+				.build();
 		return deckBuilderRepository.save(db);
 	}
 	// Méthode d'inscription d'un utilisateur
 
 	@Override
 	public DeckBuilder addAdmin(DeckBuilder deckBuilder) {
-		DeckBuilder db = DeckBuilder.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(deckBuilder.getPassword()).avatar(deckBuilder.getAvatar()).isAdmin(true).build();
+		DeckBuilder db = DeckBuilder.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(deckBuilder.getPassword()).avatar(deckBuilder.getAvatar()).role(UserRole.ADMIN.toString()).build();
 		return deckBuilderRepository.save(db);
 	}
 
@@ -43,6 +45,19 @@ public class DeckBuilderService implements IDeckBuilderService  {
         	}
         }
         return "Nom d'utilisateur ou mot de passe incorrect";
+	}
+
+	@Override
+	public Boolean isUserAdmin(Long id) {
+		Optional<DeckBuilder> db = deckBuilderRepository.findById(id);
+		
+		if(db.isPresent()) {
+			if(db.get().getRole().equals(UserRole.ADMIN.toString())) {
+			return true;
+			}
+			return false;
+		}
+		throw new RuntimeException("Utilisateur non trouvé");
 	}
 
 }
