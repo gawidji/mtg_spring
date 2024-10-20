@@ -1,6 +1,6 @@
 package com.example.demo.enums;
 
-public enum Type {
+public enum CardType {
 	
 	TERRAIN,
 	CREATURE,

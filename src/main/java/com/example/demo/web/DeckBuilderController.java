@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.entities.DeckBuilder;
 import com.example.demo.services.IDeckBuilderService;
 
 @RestController
-@RequestMapping("db")
+@RequestMapping("f_all")
 public class DeckBuilderController {
+	
+	// Contient les requetes nécessaires pour s'atuthentifier
+	// Accessibles à tous
 	
 	@Autowired
 	private IDeckBuilderService iDeckBuilderService;
@@ -41,12 +43,6 @@ public class DeckBuilderController {
 		return iDeckBuilderService.connection(request);
 	}
 	
-	
-	@GetMapping("{id}")
-	public Boolean isUserAdmin(@PathVariable Long id) {
-		
-		return iDeckBuilderService.isUserAdmin(id);
 
-	}
 
 }

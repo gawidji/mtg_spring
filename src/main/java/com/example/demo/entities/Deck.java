@@ -1,12 +1,12 @@
 package com.example.demo.entities;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
 
 import com.example.demo.enums.Format;
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -23,13 +23,17 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter @Setter @ToString
+@Data
 @Entity
+@AllArgsConstructor
+@Builder
 @Table(name = "deck")
 
 public class Deck {
@@ -57,27 +61,21 @@ public class Deck {
 	@Column(name = "image", nullable = false, unique = false)
 	private String image;
 	
+	
 	@ManyToOne
-	// @JoinColumn (name = "deck_builder", nullable = false)
-	private DeckBuilder deckBuilder;
+	@JoinColumn(name = "deckBuilder_id", nullable = false)
+    private DeckBuilder deckBuilder;
 	
-	//@OneToOne
-	//private Card commander;
-	
+
 	@ManyToMany(cascade = { CascadeType.ALL })
-	
     @JoinTable(
         name = "Deck_Cards", 
-        joinColumns = { @JoinColumn(name = "card_id") }, 
-        inverseJoinColumns = { @JoinColumn(name = "deck_id") }
+        joinColumns = { @JoinColumn(name = "deck_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "card_id") }
     )	
 	private List<Card> cartes;
 	
-	
-	
-	public Deck() {
-		cartes = new ArrayList<>();
-	}
+
 
 
 

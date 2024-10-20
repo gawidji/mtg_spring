@@ -1,14 +1,15 @@
 package com.example.demo.entities;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-
-
+import java.util.Set;
 
 import com.example.demo.enums.Edition;
 import com.example.demo.enums.Format;
 import com.example.demo.enums.Rarity;
-import com.example.demo.enums.Type;
+import com.example.demo.enums.CardType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,13 +20,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter @Setter @ToString
+
+
+@Data
 @Entity
-@Table(name = "carte")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "card")
 
 public class Card {
 	
@@ -46,7 +53,7 @@ public class Card {
 	private int coutMana;
 	
 	@Enumerated(EnumType.STRING)
-	private Type type;
+	private CardType type;
 	
 	@Enumerated(EnumType.STRING)
 	private Rarity rarete;
@@ -62,11 +69,8 @@ public class Card {
 	
 	@ManyToMany(mappedBy = "cartes")
 	private List<Deck> decks;
-
-	public Card() {
-		decks = new ArrayList<>();
-	}	
 	
+
 	
 
 }

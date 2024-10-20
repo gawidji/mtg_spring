@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entities.DeckBuilder;
 
+
 @Repository
 public interface DeckBuilderRepository extends JpaRepository<DeckBuilder, Long> {
 	Optional<DeckBuilder> findByPseudo(String pseudo);
