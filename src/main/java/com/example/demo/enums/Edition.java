@@ -3,14 +3,23 @@ package com.example.demo.enums;
 public enum Edition {
 	
 	
-	LES_FRICHES_D_ELDRAINE,
-	LES_CAVERNES_OUBLIÉES_D_IXALAN,
-	RAVNICA_REMASTERED,
-	MURDERS_AT_KARLOV_MANOR, 
-	OUTLAWS_OF_THUNDER_JUNCTION,
-	MODERN_HORIZONS_3,
-	BLOOMBURROW,
-	DUSKMOURN_HOUSE_OF_HORROR,
-	UNIVERSES_BEYOND_ASSASSINS_CREED,
-	UNIVERSES_BEYOND_FALLOUT
+	LES_FRICHES_D_ELDRAINE ("Les Friches d'Eldaines"),
+	LES_CAVERNES_OUBLIÉES_D_IXALAN ("Les Cavernes Oubliées d'Ixalan"),
+	RAVNICA_REMASTERED ("Ravinca Remastered"),
+	MURDERS_AT_KARLOV_MANOR ("Meutres au manoir Karlov"), 
+	MODERN_HORIZONS_3 ("Modern Horizons 3"),
+	BLOOMBURROW ("Bloomburrow");
+	
+	private String value;
+
+	private Edition(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
+	}
+	
+	
+	
 }

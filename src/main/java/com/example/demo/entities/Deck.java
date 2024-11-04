@@ -3,8 +3,7 @@ package com.example.demo.entities;
 import java.util.Date;
 import java.util.List;
 
-
-
+import com.example.demo.enums.Color;
 import com.example.demo.enums.Format;
 
 
@@ -18,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -27,15 +27,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Data
-@Entity
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 @Table(name = "deck")
-
+@Builder
+@Entity
 public class Deck {
 	
 	@Id
@@ -43,28 +44,35 @@ public class Deck {
 	private Long id;
 	
 	@Column(name = "nom", length = 25, nullable = false, unique = false)
-	private String nom;
+	private String name;
+	
+	@Column(name = "date_création")
+	@Temporal(TemporalType.DATE)
+	private Date dateCreation;
+	
+	@Column(name = "image")
+	private String image;
 	
 	@Enumerated(EnumType.STRING)
 	private Format format;
 	
-	@Column(name = "couleur", length = 50, nullable = false, unique = false)
-	private String couleur;
+	@Lob
+	@Column(name = "couleur", nullable = false, unique = false)
+	@Enumerated(EnumType.STRING)
+	private List<Color> colors;
 	
-	@Column(name = "date_naissance")
-	@Temporal(TemporalType.DATE)
-	private Date dateCreation;
+	@Column(name="cout_mana")
+	private Float manaCost;
+	
+	@Column(name="valeur (€)")
+	private Float value;
 	
 	@Column(name ="public", nullable = false)
 	private Boolean isPublic;
 	
-	@Column(name = "image", nullable = false, unique = false)
-	private String image;
-	
-	
 	@ManyToOne
-	@JoinColumn(name = "deckBuilder_id", nullable = false)
-    private DeckBuilder deckBuilder;
+	@JoinColumn(name = "deck_builder_id", nullable = false)
+    private DeckCreator deckBuilder;
 	
 
 	@ManyToMany(cascade = { CascadeType.ALL })
@@ -76,7 +84,9 @@ public class Deck {
 	private List<Card> cartes;
 	
 
-
+	@ManyToOne
+	@JoinColumn (name= "commander_id", nullable = true)
+	private Card commander;
 
 
 	

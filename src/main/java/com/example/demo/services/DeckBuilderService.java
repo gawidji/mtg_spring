@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entities.DeckBuilder;
+import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.UserRole;
 import com.example.demo.repositories.DeckBuilderRepository;
 
@@ -18,16 +18,17 @@ public class DeckBuilderService implements IDeckBuilderService  {
 	private DeckBuilderRepository deckBuilderRepository;
 
 	@Override
-	public DeckBuilder inscription(DeckBuilder deckBuilder) {
-		DeckBuilder db = DeckBuilder.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(deckBuilder.getPassword()).avatar(deckBuilder.getAvatar()).role(UserRole.USER.toString())
+	public DeckCreator inscription(DeckCreator deckBuilder) {
+		DeckCreator db = DeckCreator.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(deckBuilder.getPassword()).avatar(deckBuilder.getAvatar()).role(UserRole.USER.toString())
 				.build();
 		return deckBuilderRepository.save(db);
 	}
 	// Méthode d'inscription d'un utilisateur
 
 	@Override
-	public DeckBuilder addAdmin(DeckBuilder deckBuilder) {
-		DeckBuilder db = DeckBuilder.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(deckBuilder.getPassword()).avatar(deckBuilder.getAvatar()).role(UserRole.ADMIN.toString()).build();
+	public DeckCreator addAdmin(DeckCreator deckBuilder) {
+		DeckCreator db = DeckCreator.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(deckBuilder.getPassword()).avatar(deckBuilder.getAvatar()).role(UserRole.ADMIN.toString()).build();
+		
 		return deckBuilderRepository.save(db);
 	}
 
@@ -37,7 +38,7 @@ public class DeckBuilderService implements IDeckBuilderService  {
 		String email = request.get("email");
         String password = request.get("password");
         
-        Optional<DeckBuilder> deckBuilder = deckBuilderRepository.findByEmail(email);
+        Optional<DeckCreator> deckBuilder = deckBuilderRepository.findByEmail(email);
         
         if(deckBuilder.isPresent()) {
         	if(deckBuilder.get().getPassword().equals(password)) {
@@ -46,10 +47,27 @@ public class DeckBuilderService implements IDeckBuilderService  {
         }
         return "Nom d'utilisateur ou mot de passe incorrect";
 	}
+	
+	
+	@Override
+	public DeckCreator updateProfil (String email, DeckCreator deckBuilder) {
+		
+		Optional<DeckCreator> deckBuilderTarget = deckBuilderRepository.findByEmail(email);
+		
+		if(deckBuilderTarget.isPresent()) {
+			deckBuilderTarget.get().setPseudo(deckBuilder.getPseudo());
+			deckBuilderTarget.get().setAvatar(deckBuilder.getAvatar());
+			
+			DeckCreator newDb = deckBuilderTarget.get();
+			
+			return deckBuilderRepository.save(newDb);
+		}
+		throw new RuntimeException("Utilisateur non trouvé");
+	}
 
 	@Override
 	public Boolean isUserAdmin(Long id) {
-		Optional<DeckBuilder> db = deckBuilderRepository.findById(id);
+		Optional<DeckCreator> db = deckBuilderRepository.findById(id);
 		
 		if(db.isPresent()) {
 			if(db.get().getRole().equals(UserRole.ADMIN.toString())) {

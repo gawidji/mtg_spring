@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -23,20 +24,12 @@ import lombok.NoArgsConstructor;
 
 
 @Data
-
-
-@Builder
-// Permet d'intancier un objet de la class plus simplement dans BuilderService
-
+@Table(name = "deckbuilder")
 @Entity
-// Map la classe avec une data_base
-// relie les attributs de la classe et les annotations qui sont placées directement au-dessus d'eux
-
-
-@Table(name = "deck_builder")
-
-
-public class DeckBuilder {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class DeckCreator {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +46,7 @@ public class DeckBuilder {
 	
 	@Column(name = "date_naissance")
 	@Temporal(TemporalType.DATE)
-	private Date dateInscription;
+	private Date dateSign;
 	
 	@Column(name ="avatar", length = 500 )
 	private String avatar;
@@ -67,27 +60,6 @@ public class DeckBuilder {
 	// Relation one - user & many - decks
 	//mappé par "user" qui se retrouve dans la classe Deck pour générer une relation bi-directionnelle 
 	// CascadeTpe.all pour que les opérations de la classe User (persist, remove, merge, etc) soient aussi effectués sur la classe Deck
-	
-	
-	
-	
-	public DeckBuilder() {
-		this.decks = new HashSet<>();
-	}
-	
-	
-	public DeckBuilder(Long id, String pseudo, String email, String password, Date dateInscription, String avatar, String role,
-			Set<Deck> decks) {
-		super();
-		this.id = id;
-		this.pseudo = pseudo;
-		this.email = email;
-		this.password = password;
-		this.dateInscription = dateInscription;
-		this.avatar = avatar;
-		this.role = role;
-		this.decks = new HashSet<>();
-	}
 	
 
 }
