@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -40,6 +41,7 @@ public class DeckService implements IDeckService {
 		Deck d = Deck.builder().name(deck.getName()).format(deck.getFormat()).colors(deck.getColors())
 				.isPublic(false).image(deck.getImage()).deckBuilder(dbuilder.get())
 				.build();
+			
 		return deckRepository.save(d); 
 		}
 		throw new RuntimeException("Utilisateur non trouvé");
@@ -95,15 +97,24 @@ public class DeckService implements IDeckService {
 
 	
 	@Override
-	public List<Card> getCardsByFilterForDeck (Long deckId, String name, Long manaCost, Float value, CardType type, Rarity rarity, Edition edition) {
+	public List<Card> getCardsByFilterForDeck (Long deckId, String name, Long manaCostMin, Long manaCostMax,
+			Float valueMin, Float valueMax, List<CardType> types,
+			List <Rarity> rarities, List<Edition> editions) {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
 		List<Card> cardsFind = null;
 		
+		List<Format> formatDeck = new ArrayList<>();
+		formatDeck.add(deck.get().getFormat());
+		
+		List<Color> colorsDeck = new ArrayList<>();
+		colorsDeck.addAll(deck.get().getColors());
+		
 		if(deck.isPresent()) {
-				for (Color deckColor : deck.get().getColors()) {
-				cardsFind = cardRepository.findByOptionalAttribute(name, manaCost, value, deck.get().getFormat(), deckColor, type, rarity, edition);
-			}
+			
+			cardsFind = cardRepository.findByOptionalAttribute(name,manaCostMin, manaCostMax, valueMin, valueMax,
+			formatDeck, colorsDeck, types, rarities, editions);
+			
 			return cardsFind;
 		}
 		throw new RuntimeException("Deck non trouvé");
@@ -112,15 +123,26 @@ public class DeckService implements IDeckService {
 	// pour correspondre au format et aux couleurs du deck
 	
 	@Override
-	public List<Card> getCommanderByFilterForDeck (Long deckId, String name, Long manaCost, Float value, Rarity rarity, Edition edition) {
+	public List<Card> getCommanderByFilterForDeck (Long deckId, String name, Long manaCostMin, Long manaCostMax,
+			Float valueMin, Float valueMax, List<Rarity> rarities, List<Edition> editions) {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
 		List<Card> cardsFind = null;
 		
+		List<CardType> enumCommander = new ArrayList<>();
+		enumCommander.add(CardType.CREATURE_LEGENDAIRE);
+		
+		List<Format> formatDeck = new ArrayList<>();
+		formatDeck.add(deck.get().getFormat());
+		
+		List<Color> colorsDeck = new ArrayList<>();
+		colorsDeck.addAll(deck.get().getColors());
+		
 		if(deck.isPresent()) {
-				for (Color deckColor : deck.get().getColors()) {
-				cardsFind = cardRepository.findByOptionalAttribute(name, manaCost, value, deck.get().getFormat(), deckColor, CardType.CREATURE_LEGENDAIRE, rarity, edition);
-			}
+				
+			cardsFind = cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax,
+			formatDeck, colorsDeck, enumCommander, rarities, editions);
+			
 			return cardsFind;
 		}
 		throw new RuntimeException("Deck non trouvé");
@@ -361,8 +383,9 @@ public class DeckService implements IDeckService {
 	
 	
 	@Override
-	public List<Deck> getDecksByFilter (String name, List<Format> formats, List<Color> colors) {
-		return deckRepository.findByOptionalAttribute(name, formats, colors, true);
+	public List<Deck> getDecksByFilter (String name, Long manaCostMin, Long manaCostMax, 
+			Float valueMin,	Float valueMax, List<Format> formats, List<Color> colors) {
+		return deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors, true);
 	}
 	
 

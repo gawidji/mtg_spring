@@ -23,15 +23,19 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 	
 	@Query("SELECT d FROM Deck d " +
 		       "WHERE (:name IS NULL OR d.name LIKE %:name%) " +
-		       "AND (:manaCost IS NULL OR d.manaCost < :manaCost) " +
-		       "AND (:value IS NULL OR d.value < :value) " +
+		       "AND (:manaCostMin IS NULL OR d.manaCost > :manaCostMin) " +
+		       "AND (:manaCostMax IS NULL OR d.manaCost < :manaCostMax) " +
+		       "AND (:valueMin IS NULL OR d.value > :valueMin) " +
+		       "AND (:valueMax IS NULL OR d.value < :valueMax) " +
 		       "AND (:formats IS NULL OR d.format IN :formats) " +
 		       "AND (:colors IS NULL OR d.colors IN :colors) " +
 		       "AND (:isPublic IS NULL OR d.isPublic = :isPublic)")
 				List<Deck> findByOptionalAttribute(
 				@Param("name") String name,
-				@Param("manaCost") Long manaCost,
-				@Param("value") Float value,
+				@Param("manaCostMin") Long manaCostMin,
+				@Param("manaCostMax") Long manaCostMax,
+				@Param("valueMin") Float valueMin,
+				@Param("valueMax") Float valueMax,
 				@Param("formats") List<Format> formats,
 				@Param("colors") List<Color> colors,
 				@Param("isPublic") boolean isPublic

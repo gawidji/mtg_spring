@@ -19,10 +19,11 @@ public interface IDeckService {
 	String deleteDeck(Long deckID);
 	Deck updateDeck(Long deckID, Deck deckUpdate);
 
+	List<Card> getCardsByFilterForDeck(Long deckId, String name, Long manaCostMin, Long manaCostMax, Float valueMin,
+										Float valueMax, List<CardType> types, List<Rarity> rarities, List<Edition> editions);	
+	List<Card> getCommanderByFilterForDeck(Long deckId, String name, Long manaCostMin, Long manaCostMax, Float valueMin,
+			Float valueMax, List<Rarity> rarities, List<Edition> editions);
 	
-	List<Card> getCardsByFilterForDeck(Long deckId, String name, Long manaCost, Float value, CardType type, Rarity rarity, Edition edition);
-	List<Card> getCommanderByFilterForDeck(Long deckId, String name, Long manaCost, Float value, Rarity rarity, Edition edition);
-
 	Deck addCardOnDeck(Long cardId, Long deckId);
 	Deck addCommanderOnDeck(Long cardId, Long deckId);
 	String deleteCardOnDeck(Long cardId, Long deckId);
@@ -39,7 +40,14 @@ public interface IDeckService {
 	
 	// Methodes f_all
 	
-	List<Deck> getDecksByFilter(String name, List<Format> formats, List<Color> colors);
+	List<Deck> getDecksByFilter(String name, Long manaCostMin, Long manaCostMax, 
+	Float valueMin,	Float valueMax, List<Format> formats, List<Color> colors);
+
+	
+	
+	
+	
+	
 	
 	
 

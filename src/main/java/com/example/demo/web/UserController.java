@@ -57,15 +57,19 @@ public class UserController {
 
 	@GetMapping("getCards")
 	public List<Card> getCardsByFilterForDeck (@RequestParam Long deckId, @RequestParam(required = false) String name,
-			@RequestParam(required = false) Long manaCost, @RequestParam(required = false) Float value, @RequestParam(required = false) CardType type, 
-			@RequestParam(required = false) Rarity rarity, @RequestParam(required = false) Edition edition) {
-		return iDeckService.getCardsByFilterForDeck(deckId, name, manaCost, value, type, rarity, edition);
+			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
+			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
+			@RequestParam(required = false) List <CardType> types, 
+			@RequestParam(required = false) List <Rarity> rarities, @RequestParam(required = false) List<Edition> editions) {
+		return iDeckService.getCardsByFilterForDeck(deckId, name, manaCostMin, manaCostMax, valueMin, valueMax, types, rarities, editions);
 	}
 	
 	@GetMapping("getCommander")
-	public List<Card> getCommanderByFilterForDeck(@RequestParam Long deckId, @RequestParam(required = false) String name, @RequestParam(required = false) Long manaCost,
-			@RequestParam(required = false) Float value, @RequestParam(required = false) Rarity rarity,@RequestParam(required = false) Edition edition) {
-			return iDeckService.getCommanderByFilterForDeck(deckId, name, manaCost, value, rarity, edition);
+	public List<Card> getCommanderByFilterForDeck(@RequestParam Long deckId, @RequestParam(required = false) String name,
+			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
+			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax, 
+			@RequestParam(required = false) List <Rarity> rarities,@RequestParam(required = false) List<Edition> editions) {
+			return iDeckService.getCommanderByFilterForDeck(deckId, name, manaCostMin, manaCostMax,  valueMin, valueMax, rarities, editions);
 	}
 
 	

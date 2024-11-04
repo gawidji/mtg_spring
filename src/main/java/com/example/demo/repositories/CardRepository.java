@@ -28,22 +28,26 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	
 	@Query("SELECT c FROM Card c " +
 		       "WHERE (:name IS NULL OR c.name LIKE %:name%) " +
-		       "AND (:manaCost IS NULL OR c.manaCost < :manaCost) " +
-		       "AND (:value IS NULL OR c.value < :value) " +
-		       "AND (:format IS NULL OR c.formats = :format) " +
-		       "AND (:color IS NULL OR c.colors = :color) " +
-		       "AND (:type IS NULL OR c.type = :type) " +
-		       "AND (:rarity IS NULL OR c.rarity = :rarity) " +
-		       "AND (:edition IS NULL OR c.edition = :edition) ")
+		       "AND (:manaCostMin IS NULL OR c.manaCost > :manaCostMin) " +
+		       "AND (:manaCostMax IS NULL OR c.manaCost < :manaCostMax) " +
+		       "AND (:valueMin IS NULL OR c.value > :valueMin) " +
+		       "AND (:valueMax IS NULL OR c.value < :valueMax) " +
+		       "AND (:formats IS NULL OR c.formats IN :formats) " +
+		       "AND (:colors IS NULL OR c.colors IN :colors) " +
+		       "AND (:types IS NULL OR c.type IN :types) " +
+		       "AND (:rarities IS NULL OR c.rarity IN :rarities) " +
+		       "AND (:editions IS NULL OR c.edition IN :editions) ")
 		List<Card> findByOptionalAttribute(
 				@Param("name") String name,
-				@Param("manaCost") Long manaCost,
-				@Param("value") Float value,
-		        @Param("format") Format format,
-		        @Param("color") Color color,
-		        @Param("type") CardType type,
-		        @Param("rarity") Rarity rarity,
-		        @Param("edition") Edition edition);
+				@Param("manaCostMin") Long manaCostMin,
+				@Param("manaCostMax") Long manaCostMax,
+				@Param("valueMin") Float valueMin,
+				@Param("valueMax") Float valueMax,
+		        @Param("formats") List<Format> formats,
+		        @Param("colors") List<Color> colors,
+		        @Param("types") List<CardType> types,
+		        @Param("rarities") List<Rarity> rarities,
+		        @Param("editions") List<Edition> editions);
 
 	
 

@@ -59,17 +59,21 @@ public class AllController {
 	}
 	
 	@GetMapping("getDecks")
-	List<Deck> getDecksByFilter( @RequestParam(required = false) String name, @RequestParam(required = false) List<Format> formats,
-			@RequestParam(required = false) List<Color> colors) {
-		return deckService.getDecksByFilter(name, formats, colors);
+	List<Deck> getDecksByFilter( @RequestParam(required = false) String name,
+	@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
+	@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
+	@RequestParam(required = false) List<Format> formats, @RequestParam(required = false) List<Color> colors) {
+		return deckService.getDecksByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors);
 	}
 	
 	@GetMapping("getCards")
-	public List<Card> getCardsByFilter (@RequestParam(required = false) String name, @RequestParam(required = false) Long manaCost, 
-			@RequestParam(required = false) Float value, @RequestParam(required = false) Format format,
-			@RequestParam(required = false)Color color, @RequestParam(required = false) CardType type,
-			@RequestParam(required = false)Rarity rarity, @RequestParam(required = false) Edition edition) {
-		return cardService.getCardsByFilter(name, manaCost, value, format, color, type, rarity, edition);
+	public List<Card> getCardsByFilter (@RequestParam(required = false) String name, 
+			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
+			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
+			@RequestParam(required = false) List<Format> formats,
+			@RequestParam(required = false)List<Color> colors, @RequestParam(required = false) List<CardType> types,
+			@RequestParam(required = false)List<Rarity> rarities, @RequestParam(required = false) List<Edition> editions) {
+		return cardService.getCardsByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors, types, rarities, editions);
 	}
 	
 	@GetMapping("getDeck")

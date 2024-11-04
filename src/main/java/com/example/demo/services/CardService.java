@@ -72,10 +72,11 @@ public class CardService implements ICardService {
 	}
 	
 	@Override
-	public List<Card> getCardsByFilter (String name, Long manaCost, Float value, Format format, Color color, CardType type, Rarity rarity, Edition edition) {
-		return cardRepository.findByOptionalAttribute(name, manaCost, value, format, color, type, rarity, edition);
+	public List<Card> getCardsByFilter (String name,  Long manaCostMin, Long manaCostMax, 
+			Float valueMin,	Float valueMax, List<Format> formats, List<Color> colors, List<CardType> types, List<Rarity> rarities, List<Edition> editions) {
+		return cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors, types, rarities, editions);
 	}
-	// Filtre les cartes par tous les attributs potentiellement entrés en paramètre
+	// Filtre les cartes par tous les attributs potentiellement entrés en paramètres
 		
 	
 	
