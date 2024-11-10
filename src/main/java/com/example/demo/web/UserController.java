@@ -35,10 +35,18 @@ public class UserController {
 	private IDeckService iDeckService;
 	
 	
-	@PutMapping("updateProfil")
-	public DeckCreator updateProfil(@RequestParam String email, @RequestBody DeckCreator deckBuilder) {
-		return iDeckBuilderService.updateProfil(email, deckBuilder);
+	@PutMapping("updateAccount")
+	public DeckCreator updateAccount(@RequestParam String email, @RequestBody DeckCreator deckBuilder) {
+		return iDeckBuilderService.updateAccount(email, deckBuilder);
 	}
+	// Nécessite une atuh par token pour que email soit celui de l'user connecté
+	
+	@DeleteMapping("deleteAccount")
+	public String deleteAccount(@RequestParam Long dbID) {
+		return iDeckBuilderService.deleteDeckBuilder(dbID);
+	}
+	// Appel de deleteDeckBuilder mais doit nécessité une auth par token pour que le dbID soit celui de l'user connecté
+	
 	
 	@PostMapping("addDeck")
 	public Deck addDeck(@RequestParam Long userId, @RequestBody Deck deck) {

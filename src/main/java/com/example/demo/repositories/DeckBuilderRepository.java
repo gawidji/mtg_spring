@@ -1,16 +1,34 @@
 package com.example.demo.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entities.DeckCreator;
+import com.example.demo.enums.UserActivity;
+import com.example.demo.enums.UserRole;
 
 
 @Repository
 public interface DeckBuilderRepository extends JpaRepository<DeckCreator, Long> {
 	Optional<DeckCreator> findByPseudo(String pseudo);
 	Optional<DeckCreator> findByEmail(String email);
-	// Optional<DeckBuilder> findByIsAdmin();
+	
+	
+	@Query("SELECT d FROM DeckCreator d " +
+		       "WHERE (:pseudo IS NULL OR d.pseudo LIKE %:pseudo%) " +
+		       "AND (:email IS NULL OR d.email LIKE %:email%) " +
+		       "AND (:activities IS NULL OR d.activity IN :activities) " + 
+		       "AND (:role IS NULL OR d.role = :role )")
+				List<DeckCreator> findByOptionalAttribute(
+		       @Param("pseudo") String pseudo,
+		       @Param("email") String email,
+		       @Param("activities") List<UserActivity> activities,
+		       @Param("role") UserRole role
+		       );
+	
 }

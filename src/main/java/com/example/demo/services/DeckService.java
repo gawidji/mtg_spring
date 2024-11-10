@@ -15,6 +15,7 @@ import com.example.demo.enums.Color;
 import com.example.demo.enums.Edition;
 import com.example.demo.enums.Format;
 import com.example.demo.enums.Rarity;
+import com.example.demo.enums.UserActivity;
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Deck;
 import com.example.demo.repositories.CardRepository;
@@ -38,10 +39,15 @@ public class DeckService implements IDeckService {
 		Optional<DeckCreator> dbuilder = deckBuilderRepository.findById(userId);
 		
 		if(dbuilder.isPresent()) {
+		
+		DeckCreator db  = dbuilder.get();
 		Deck d = Deck.builder().name(deck.getName()).format(deck.getFormat()).colors(deck.getColors())
-				.isPublic(false).image(deck.getImage()).deckBuilder(dbuilder.get())
+				.isPublic(false).image(deck.getImage()).deckBuilder(db)
 				.build();
-			
+		
+		db.setActivity(UserActivity.CREATOR);
+		
+		deckBuilderRepository.save(db);	
 		return deckRepository.save(d); 
 		}
 		throw new RuntimeException("Utilisateur non trouvé");
@@ -102,7 +108,6 @@ public class DeckService implements IDeckService {
 			List <Rarity> rarities, List<Edition> editions) {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
-		List<Card> cardsFind = null;
 		
 		List<Format> formatDeck = new ArrayList<>();
 		formatDeck.add(deck.get().getFormat());
@@ -112,10 +117,9 @@ public class DeckService implements IDeckService {
 		
 		if(deck.isPresent()) {
 			
-			cardsFind = cardRepository.findByOptionalAttribute(name,manaCostMin, manaCostMax, valueMin, valueMax,
+			return cardRepository.findByOptionalAttribute(name,manaCostMin, manaCostMax, valueMin, valueMax,
 			formatDeck, colorsDeck, types, rarities, editions);
 			
-			return cardsFind;
 		}
 		throw new RuntimeException("Deck non trouvé");
 	}
@@ -288,6 +292,10 @@ public class DeckService implements IDeckService {
 				Deck deckPresent = deck.get();
 				deckPresent.setIsPublic(true);
 				deckRepository.save(deckPresent);
+				
+				DeckCreator db = deckPresent.getDeckBuilder();
+				db.setActivity(UserActivity.PUBLISHER);
+				deckBuilderRepository.save(db);
 				
 				 return "Deck " + deckPresent.getName() + " publié !";
 			}

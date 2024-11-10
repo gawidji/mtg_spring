@@ -5,9 +5,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.example.demo.enums.UserActivity;
+import com.example.demo.enums.UserRole;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -51,8 +56,13 @@ public class DeckCreator {
 	@Column(name ="avatar", length = 500 )
 	private String avatar;
 	
+	@Column(name = "activite", nullable = true)
+	@Enumerated(EnumType.STRING)
+	private UserActivity activity;
+	
 	@Column(name = "role", nullable = false)
-	private String role;
+	@Enumerated(EnumType.STRING)
+	private UserRole role;
 	
 	
 	@OneToMany(mappedBy = "deckBuilder", cascade = CascadeType.ALL)

@@ -12,6 +12,7 @@ import com.example.demo.enums.Rarity;
 public interface ICardService {
 	
 	Card addCard(Card card);
+	Card updateCard(Long cardID, Card cardUpdate);
 	String deleteCard(Long cardID);
 	List<Card> getAllCards();
 	List<Format> getCardFormats(Long cardID);

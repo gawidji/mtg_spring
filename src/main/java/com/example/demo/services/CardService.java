@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,37 @@ public class CardService implements ICardService {
 				.type(card.getType()).rarity(card.getRarity()).edition(card.getEdition()).value(card.getValue())
 				.build();
 		return cardRepository.save(cd);
+	}
+	
+	@Override 
+	public Card updateCard (Long cardID, Card cardUpdate) {
+		
+		Optional<Card> card = cardRepository.findById(cardID);
+		
+		if(card.isPresent()) {
+			
+			Card newCard = card.get();	
+				
+			if( cardUpdate.getName() != null) {
+				newCard.setName(cardUpdate.getName()); }
+			if(cardUpdate.getText() != null) {
+				newCard.setText(cardUpdate.getText()); }
+			if( cardUpdate.getManaCost() != null) {
+				newCard.setManaCost(cardUpdate.getManaCost()); }
+			if( cardUpdate.getValue() != null) {
+				newCard.setValue(cardUpdate.getValue()); }
+			if( cardUpdate.getFormats() != null) {
+				newCard.setFormats(cardUpdate.getFormats()); }
+			if( cardUpdate.getEdition() != null) {
+				newCard.setEdition(cardUpdate.getEdition()); }
+			if( cardUpdate.getRarity() != null) {
+				newCard.setRarity(cardUpdate.getRarity()); }
+			if(cardUpdate.getImage() != null) {
+				newCard.setImage(cardUpdate.getImage()); }
+			
+			return cardRepository.save(newCard);
+		}
+		throw new RuntimeException("Deck non trouvé");
 	}
 	
 	@Override
