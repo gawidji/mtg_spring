@@ -15,7 +15,7 @@ import com.example.demo.enums.Format;
 import com.example.demo.enums.Rarity;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
-	
+	/*
 	Optional<Card> findByName(String nom);
 	List<Card> findByNameContaining(String nom);
 	List<Card> findByFormats(Format formats);
@@ -24,6 +24,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	List<Card> findByType (CardType type);
 	List<Card> findByRarity(Rarity rarete);
 	List<Card> findByEdition (Edition edition);
+	*/
 	// Potentiellement ajouter un filtre pour la value
 	
 	@Query("SELECT c FROM Card c " +

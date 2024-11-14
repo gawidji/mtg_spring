@@ -57,7 +57,7 @@ public class Deck {
 	private Format format;
 	
 	@Lob
-	@Column(name = "couleur", nullable = false, unique = false)
+	@Column(name = "couleurs", nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)
 	private List<Color> colors;
 	

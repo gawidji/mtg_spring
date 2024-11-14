@@ -1,49 +1,35 @@
 package com.example.demo.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.enums.UserRole;
 import com.example.demo.repositories.DeckBuilderRepository;
+import com.example.demo.securityMalek.ConfigurePasswordEncoder;
 
 @Service
 //Obligatoire pour rendre le fichier visible
-public class DeckBuilderService implements IDeckBuilderService  {
+public class DeckBuilderService implements IDeckBuilderService, UserDetailsService  {
 	
 	@Autowired
 	private DeckBuilderRepository deckBuilderRepository;
-
-	@Override
-	public DeckCreator inscription(DeckCreator deckBuilder) {
-		DeckCreator db = DeckCreator.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(deckBuilder.getPassword()).avatar(deckBuilder.getAvatar())
-				.activity(UserActivity.VIEWVER).role(UserRole.USER)
-				.build();
-		
-		return deckBuilderRepository.save(db);
-	}
-	// Méthode d'inscription d'un utilisateur
-
-	@Override
-	public DeckCreator addAdmin(DeckCreator deckBuilder) {
-		DeckCreator db = DeckCreator.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(deckBuilder.getPassword()).
-				avatar(deckBuilder.getAvatar()).role(UserRole.ADMIN)
-				.build();
-		
-		return deckBuilderRepository.save(db);
-	}
-
-	@Override
-	public String connection( Map<String, String> request) {
-
-		String email = request.get("email");
-        String password = request.get("password");
-        
+	
+	       
+        /*
         Optional<DeckCreator> deckBuilder = deckBuilderRepository.findByEmail(email);
         
         if(deckBuilder.isPresent()) {
@@ -52,7 +38,18 @@ public class DeckBuilderService implements IDeckBuilderService  {
         	}
         }
         return "Nom d'utilisateur ou mot de passe incorrect";
+        */ 
+	
+	
+	// La méthode qui va rechercher si le mail entré pednant l'auth correspond à une valeur de la database
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+		return deckBuilderRepository.findByEmail(email)
+				.orElseThrow(() -> new UsernameNotFoundException("Cette adresse mail ne correpsond à aucun compte DeckBuilder"));
 	}
+	
+	
 	
 	
 	@Override
@@ -116,5 +113,7 @@ public class DeckBuilderService implements IDeckBuilderService  {
 	public List<DeckCreator> getAdmins(String pseudo, String email) {		
 		return deckBuilderRepository.findByOptionalAttribute(pseudo, email, null, UserRole.ADMIN);
 	}
+
+	
 
 }

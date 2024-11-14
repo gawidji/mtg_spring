@@ -51,14 +51,20 @@ public class Card {
 	@Column(name = "texte", nullable = false, unique = false)
 	private String text;
 	
+	@Column(name = "image", unique = false)
+	private String image;
+	
 	@Column(name="cout_mana")
 	private Long manaCost;
 	
-	@Column(name = "valeur (€)", unique = false)
+	/**
+	 * Valeur en €
+	 */
+	@Column(name = "valeur", unique = false)
 	private Float value;
 	
 	@Lob
-	@Column(name = "formats autorisés", nullable= false, unique = false)
+	@Column(name = "formats_autorises", nullable= false, unique = false)
 	@Enumerated(EnumType.STRING)
 	private List<Format> formats;
 	
@@ -78,9 +84,6 @@ public class Card {
 	@Enumerated(EnumType.STRING)
 	private Edition edition;
 	
-	
-	@Column(name = "image", unique = false)
-	private String image;
 	
 	@ManyToMany(mappedBy = "cartes")
 	private List<Deck> decks;

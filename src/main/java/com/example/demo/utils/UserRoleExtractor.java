@@ -1,12 +1,11 @@
 package com.example.demo.utils;
 
-/*
+
 import java.util.Collection;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-import com.doranco.security.enums.EnumRole;
 import com.example.demo.enums.UserRole;
 
 public class UserRoleExtractor {
@@ -34,4 +33,4 @@ public class UserRoleExtractor {
 	}
 
 }
-*/
+

@@ -1,6 +1,7 @@
+/*
 package com.example.demo.security;
 
-/*
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class JwtService {
                 .compact();
     }
     
-
+    
 	Méthode de conception du token d'authentification
 
 	le token contient : 
@@ -54,7 +55,7 @@ public class JwtService {
 	setIssuedAt =  la date de création du token 
 	setExpiration = la date d'expiration du token 
 	signWith = association du token à la clé secrète et algorithme
-
+	
     
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
@@ -93,6 +94,6 @@ public class JwtService {
                 .getBody();
     }
 }
-
 */
+
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.entities.Card;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.UserActivity;
+import com.example.demo.services.IAuthenticationService;
 import com.example.demo.services.ICardService;
 import com.example.demo.services.IDeckBuilderService;
 
@@ -29,11 +30,14 @@ public class AdminController {
 	private IDeckBuilderService iDeckBuilderService;
 	
 	@Autowired
+	private IAuthenticationService iAuthenticationService;
+	
+	@Autowired
 	ICardService iCardService;
 	
 	@PostMapping("addAdmin")
 	public DeckCreator addAdmin(@RequestBody DeckCreator db) {
-		return iDeckBuilderService.addAdmin(db);
+		return iAuthenticationService.addAdmin(db);
 		
 	}
 	

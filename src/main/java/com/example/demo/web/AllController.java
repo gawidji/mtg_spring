@@ -23,8 +23,10 @@ import com.example.demo.enums.Format;
 import com.example.demo.enums.Rarity;
 import com.example.demo.repositories.CardRepository;
 import com.example.demo.repositories.DeckRepository;
+import com.example.demo.services.AuthenticationService;
 import com.example.demo.services.CardService;
 import com.example.demo.services.DeckService;
+import com.example.demo.services.IAuthenticationService;
 import com.example.demo.services.IDeckBuilderService;
 
 @RestController
@@ -34,8 +36,9 @@ public class AllController {
 	// Contient les requetes nécessaires pour s'atuthentifier
 	// Accessibles à tous
 	
+	
 	@Autowired
-	private IDeckBuilderService iDeckBuilderService;
+	private IAuthenticationService iAuthenticationService;
 	
 	@Autowired
 	private DeckService deckService;
@@ -48,14 +51,14 @@ public class AllController {
 	
 	@PostMapping("inscription")
 	public DeckCreator inscription(@RequestBody DeckCreator db) {
-		return iDeckBuilderService.inscription(db);
+		return iAuthenticationService.inscription(db);
 		
 	}
 	
 	
-	@PostMapping("connection")
-	public String connection(@RequestBody Map<String, String> request) {
-		return iDeckBuilderService.connection(request);
+	@PostMapping("connexion")
+	public String connexion(@RequestBody Map<String, String> request) {
+		return iAuthenticationService.connexion(request);
 	}
 	
 	@GetMapping("getDecks")
