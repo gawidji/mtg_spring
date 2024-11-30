@@ -7,19 +7,23 @@ import java.util.List;
 import java.util.Set;
 
 import com.example.demo.enums.Edition;
-import com.example.demo.enums.Format;
+import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
 import com.example.demo.enums.CardType;
-import com.example.demo.enums.Color;
+import com.example.demo.enums.EnumColor;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -57,21 +61,22 @@ public class Card {
 	@Column(name="cout_mana")
 	private Long manaCost;
 	
-	/**
-	 * Valeur en €
-	 */
 	@Column(name = "valeur", unique = false)
 	private Float value;
 	
-	@Lob
-	@Column(name = "formats_autorises", nullable= false, unique = false)
+	@ElementCollection
+	@Column(name = "formats_autorises", nullable= true, unique = false)
 	@Enumerated(EnumType.STRING)
-	private List<Format> formats;
+	private List<EnumFormat> formats;
 	
-	@Lob
-	@Column(name = "couleur", nullable = false, unique = false)
-	@Enumerated(EnumType.STRING)
-	private List<Color> colors;
+	
+	@ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+        name = "Cards_Colors", 
+        joinColumns = { @JoinColumn(name = "card_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "color_id") }
+    )	
+	private List<Color> colors = new ArrayList<>();
 	
 	
 	@Enumerated(EnumType.STRING)

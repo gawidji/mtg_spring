@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entities.Card;
+import com.example.demo.entities.Color;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.UserActivity;
+import com.example.demo.register.CardRegister;
+import com.example.demo.services.ColorService;
 import com.example.demo.services.IAuthenticationService;
 import com.example.demo.services.ICardService;
 import com.example.demo.services.IDeckBuilderService;
@@ -34,6 +37,9 @@ public class AdminController {
 	
 	@Autowired
 	ICardService iCardService;
+	
+	@Autowired
+	ColorService colorService;
 	
 	@PostMapping("addAdmin")
 	public DeckCreator addAdmin(@RequestBody DeckCreator db) {
@@ -58,9 +64,9 @@ public class AdminController {
 	}
 	
 	@PostMapping("addCard")
-	public Card addCard(@RequestBody Card card) {
+	public Card addCard(@RequestBody CardRegister cardRegister ) {
 		
-		return iCardService.addCard(card);
+		return iCardService.addCard(cardRegister.getCard(), cardRegister.getColors());
 	}
 	
 	@PutMapping("updateCard")
@@ -74,6 +80,15 @@ public class AdminController {
 		return iCardService.deleteCard(cardID);
 	}
 	
-	// Ajouter une méthode pour bannir un user 
-
+	
+	@PostMapping("addColor")
+	public Color addColor(@RequestBody Color color ) {
+		
+		return colorService.addColor(color);
+	}
+	
+	@DeleteMapping("deleteColor")
+	public String deleteColor(@RequestParam long colorId) {
+		return colorService.deleteColor(colorId);
+	}
 }

@@ -41,7 +41,7 @@ public class DeckBuilderService implements IDeckBuilderService, UserDetailsServi
         */ 
 	
 	
-	// La méthode qui va rechercher si le mail entré pednant l'auth correspond à une valeur de la database
+	// La méthode qui va rechercher si le mail entré pendant l'auth correspond à une valeur de la database
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub

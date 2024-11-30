@@ -1,6 +1,6 @@
 package com.example.demo.enums;
 
-public enum Format {
+public enum EnumFormat {
 	
 	COMMANDER ("Commander"),
 	STANDARD ("Standard"),
@@ -13,7 +13,7 @@ public enum Format {
 	
 	private String value;
 
-	private Format(String value) {
+	private EnumFormat(String value) {
 		this.value = value;
 	}
 

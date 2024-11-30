@@ -10,16 +10,16 @@ import org.springframework.data.repository.query.Param;
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Deck;
 import com.example.demo.entities.DeckCreator;
-import com.example.demo.enums.Color;
-import com.example.demo.enums.Format;
+import com.example.demo.enums.EnumColor;
+import com.example.demo.enums.EnumFormat;
 
 public interface DeckRepository extends JpaRepository<Deck, Long> {
 	
 	Optional<Deck> findByName(String name);
 	List<Deck> findByNameContaining(String nom);
 	List <Deck> findByDeckBuilder (DeckCreator deckBuilder);
-	List<Deck> findByFormat(Format format);
-	List<Deck> findByColors (Color color);
+	List<Deck> findByFormat(EnumFormat format);
+	List<Deck> findByColors (EnumColor color);
 	
 	@Query("SELECT d FROM Deck d " +
 		       "WHERE (:name IS NULL OR d.name LIKE %:name%) " +
@@ -36,8 +36,8 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 				@Param("manaCostMax") Long manaCostMax,
 				@Param("valueMin") Float valueMin,
 				@Param("valueMax") Float valueMax,
-				@Param("formats") List<Format> formats,
-				@Param("colors") List<Color> colors,
+				@Param("formats") List<EnumFormat> formats,
+				@Param("colors") List<EnumColor> colors,
 				@Param("isPublic") boolean isPublic
 				);
 	

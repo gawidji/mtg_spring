@@ -6,9 +6,9 @@ import java.util.Set;
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Deck;
 import com.example.demo.enums.CardType;
-import com.example.demo.enums.Color;
+import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.Edition;
-import com.example.demo.enums.Format;
+import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
 
 public interface IDeckService {
@@ -41,7 +41,7 @@ public interface IDeckService {
 	// Methodes f_all
 	
 	List<Deck> getDecksByFilter(String name, Long manaCostMin, Long manaCostMax, 
-	Float valueMin,	Float valueMax, List<Format> formats, List<Color> colors);
+	Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors);
 
 	
 	

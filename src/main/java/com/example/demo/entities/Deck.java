@@ -3,8 +3,8 @@ package com.example.demo.entities;
 import java.util.Date;
 import java.util.List;
 
-import com.example.demo.enums.Color;
-import com.example.demo.enums.Format;
+import com.example.demo.enums.EnumColor;
+import com.example.demo.enums.EnumFormat;
 
 
 import jakarta.persistence.CascadeType;
@@ -54,12 +54,12 @@ public class Deck {
 	private String image;
 	
 	@Enumerated(EnumType.STRING)
-	private Format format;
+	private EnumFormat format;
 	
 	@Lob
 	@Column(name = "couleurs", nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)
-	private List<Color> colors;
+	private List<EnumColor> colors;
 	
 	@Column(name="cout_mana")
 	private Float manaCost;

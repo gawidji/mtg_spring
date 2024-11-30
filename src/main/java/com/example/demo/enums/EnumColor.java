@@ -1,6 +1,6 @@
 package com.example.demo.enums;
 
-public enum Color {
+public enum EnumColor {
 	
 	BLEU ("Bleu"),
 	VERT ("Vert"), 
@@ -11,7 +11,7 @@ public enum Color {
 	
 	private String value;
 
-	private Color(String value) {
+	private EnumColor(String value) {
 		this.value = value;
 	}
 

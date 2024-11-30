@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
-import com.example.demo.enums.Color;
+import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.Edition;
-import com.example.demo.enums.Format;
+import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.entities.Card;
@@ -109,10 +109,10 @@ public class DeckService implements IDeckService {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
 		
-		List<Format> formatDeck = new ArrayList<>();
+		List<EnumFormat> formatDeck = new ArrayList<>();
 		formatDeck.add(deck.get().getFormat());
 		
-		List<Color> colorsDeck = new ArrayList<>();
+		List<EnumColor> colorsDeck = new ArrayList<>();
 		colorsDeck.addAll(deck.get().getColors());
 		
 		if(deck.isPresent()) {
@@ -136,10 +136,10 @@ public class DeckService implements IDeckService {
 		List<CardType> enumCommander = new ArrayList<>();
 		enumCommander.add(CardType.CREATURE_LEGENDAIRE);
 		
-		List<Format> formatDeck = new ArrayList<>();
+		List<EnumFormat> formatDeck = new ArrayList<>();
 		formatDeck.add(deck.get().getFormat());
 		
-		List<Color> colorsDeck = new ArrayList<>();
+		List<EnumColor> colorsDeck = new ArrayList<>();
 		colorsDeck.addAll(deck.get().getColors());
 		
 		if(deck.isPresent()) {
@@ -166,8 +166,8 @@ public class DeckService implements IDeckService {
 			
 			boolean communColor = false;
 			
-			for (Color deckColor : deckToTarget.get().getColors()) {
-				for (Color cardColor : cardToAdd.get().getColors()) {
+			for (EnumColor deckColor : deckToTarget.get().getColors()) {
+				for (EnumColor cardColor : cardToAdd.get().getColors()) {
 					if(deckColor.equals(cardColor)) {
 						communColor = true;
 						break;
@@ -177,7 +177,7 @@ public class DeckService implements IDeckService {
 			
 			if(cardToAdd.get().getFormats().contains(deckToTarget.get().getFormat()) && communColor == true	) {
 				
-				if(deckToTarget.get().getFormat().equals(Format.COMMANDER.toString()) ) {
+				if(deckToTarget.get().getFormat().equals(EnumFormat.COMMANDER.toString()) ) {
 						if ( deckToTarget.get().getCartes().size() > 99) {
 									
 							throw new RuntimeException("Nombre de cartes maximum atteint");
@@ -230,7 +230,7 @@ public class DeckService implements IDeckService {
 			Optional<Deck> deckToTarget = deckRepository.findById(deckId);
 			
 			if(cardToAdd.isPresent() && deckToTarget.isPresent()) {
-				if(cardToAdd.get().getType().equals(CardType.CREATURE_LEGENDAIRE.toString()) && deckToTarget.get().getFormat().equals(Format.COMMANDER.toString()) ) {
+				if(cardToAdd.get().getType().equals(CardType.CREATURE_LEGENDAIRE.toString()) && deckToTarget.get().getFormat().equals(EnumFormat.COMMANDER.toString()) ) {
 					if(deckToTarget.get().getFormat().equals(null)) {
 							deckToTarget.get().setCommander(cardToAdd.get());
 					}
@@ -286,8 +286,8 @@ public class DeckService implements IDeckService {
 		
 		if(deck.isPresent()) {
 
-			if(deck.get().getFormat().equals(Format.COMMANDER.toString()) && deck.get().getCartes().size() == 100 ||
-				!deck.get().getFormat().equals(Format.COMMANDER.toString()) && deck.get().getCartes().size() > 59
+			if(deck.get().getFormat().equals(EnumFormat.COMMANDER.toString()) && deck.get().getCartes().size() == 100 ||
+				!deck.get().getFormat().equals(EnumFormat.COMMANDER.toString()) && deck.get().getCartes().size() > 59
 					) {
 				Deck deckPresent = deck.get();
 				deckPresent.setIsPublic(true);
@@ -392,7 +392,7 @@ public class DeckService implements IDeckService {
 	
 	@Override
 	public List<Deck> getDecksByFilter (String name, Long manaCostMin, Long manaCostMax, 
-			Float valueMin,	Float valueMax, List<Format> formats, List<Color> colors) {
+			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors) {
 		return deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors, true);
 	}
 	

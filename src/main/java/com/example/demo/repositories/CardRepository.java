@@ -9,9 +9,9 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.demo.entities.Card;
 import com.example.demo.enums.CardType;
-import com.example.demo.enums.Color;
+import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.Edition;
-import com.example.demo.enums.Format;
+import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
@@ -27,14 +27,13 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	*/
 	// Potentiellement ajouter un filtre pour la value
 	
+	
 	@Query("SELECT c FROM Card c " +
 		       "WHERE (:name IS NULL OR c.name LIKE %:name%) " +
 		       "AND (:manaCostMin IS NULL OR c.manaCost > :manaCostMin) " +
 		       "AND (:manaCostMax IS NULL OR c.manaCost < :manaCostMax) " +
 		       "AND (:valueMin IS NULL OR c.value > :valueMin) " +
 		       "AND (:valueMax IS NULL OR c.value < :valueMax) " +
-		       "AND (:formats IS NULL OR c.formats IN :formats) " +
-		       "AND (:colors IS NULL OR c.colors IN :colors) " +
 		       "AND (:types IS NULL OR c.type IN :types) " +
 		       "AND (:rarities IS NULL OR c.rarity IN :rarities) " +
 		       "AND (:editions IS NULL OR c.edition IN :editions) ")
@@ -44,12 +43,13 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 				@Param("manaCostMax") Long manaCostMax,
 				@Param("valueMin") Float valueMin,
 				@Param("valueMax") Float valueMax,
-		        @Param("formats") List<Format> formats,
-		        @Param("colors") List<Color> colors,
 		        @Param("types") List<CardType> types,
 		        @Param("rarities") List<Rarity> rarities,
 		        @Param("editions") List<Edition> editions);
-
 	
+	/*
+	@Query("SELECT c FROM Card c JOIN c.oneOrManyColors Colors WHERE Colors.name IN :colors")
+	List<Card> findByColor(@Param("colors") List<EnumColor> colors);
+	*/
 
 }

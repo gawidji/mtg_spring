@@ -17,9 +17,9 @@ import com.example.demo.entities.Card;
 import com.example.demo.entities.Deck;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
-import com.example.demo.enums.Color;
+import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.Edition;
-import com.example.demo.enums.Format;
+import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
 import com.example.demo.repositories.CardRepository;
 import com.example.demo.repositories.DeckRepository;
@@ -65,7 +65,7 @@ public class AllController {
 	List<Deck> getDecksByFilter( @RequestParam(required = false) String name,
 	@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
 	@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
-	@RequestParam(required = false) List<Format> formats, @RequestParam(required = false) List<Color> colors) {
+	@RequestParam(required = false) List<EnumFormat> formats, @RequestParam(required = false) List<EnumColor> colors) {
 		return deckService.getDecksByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors);
 	}
 	
@@ -73,8 +73,8 @@ public class AllController {
 	public List<Card> getCardsByFilter (@RequestParam(required = false) String name, 
 			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
 			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
-			@RequestParam(required = false) List<Format> formats,
-			@RequestParam(required = false)List<Color> colors, @RequestParam(required = false) List<CardType> types,
+			@RequestParam(required = false) List<EnumFormat> formats,
+			@RequestParam(required = false)List<EnumColor> colors, @RequestParam(required = false) List<CardType> types,
 			@RequestParam(required = false)List<Rarity> rarities, @RequestParam(required = false) List<Edition> editions) {
 		return cardService.getCardsByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors, types, rarities, editions);
 	}
@@ -82,6 +82,14 @@ public class AllController {
 	@GetMapping("getDeck")
 	Optional<Deck> getDeck (@RequestParam Long deckId) {
 		return deckRepository.findById(deckId);
+	}
+	
+	@Autowired
+	private CardRepository cardRepository;
+	
+	@GetMapping("getCardsColors")
+	public List<Card> getCardsByColors (@RequestParam List<EnumColor> listColors) {
+		return cardRepository.findByColor(listColors);
 	}
 
 }
