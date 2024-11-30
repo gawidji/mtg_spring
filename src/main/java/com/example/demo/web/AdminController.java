@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Color;
 import com.example.demo.entities.DeckCreator;
+import com.example.demo.entities.Format;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.register.CardRegister;
 import com.example.demo.services.ColorService;
+import com.example.demo.services.FormatService;
 import com.example.demo.services.IAuthenticationService;
 import com.example.demo.services.ICardService;
 import com.example.demo.services.IDeckBuilderService;
@@ -40,6 +42,9 @@ public class AdminController {
 	
 	@Autowired
 	ColorService colorService;
+	
+	@Autowired
+	FormatService formatService;
 	
 	@PostMapping("addAdmin")
 	public DeckCreator addAdmin(@RequestBody DeckCreator db) {
@@ -66,7 +71,7 @@ public class AdminController {
 	@PostMapping("addCard")
 	public Card addCard(@RequestBody CardRegister cardRegister ) {
 		
-		return iCardService.addCard(cardRegister.getCard(), cardRegister.getColors());
+		return iCardService.addCard(cardRegister.getCard(), cardRegister.getColors(), cardRegister.getFormats() );
 	}
 	
 	@PutMapping("updateCard")
@@ -90,5 +95,17 @@ public class AdminController {
 	@DeleteMapping("deleteColor")
 	public String deleteColor(@RequestParam long colorId) {
 		return colorService.deleteColor(colorId);
+	}
+	
+	
+	@PostMapping("addFormat")
+	public Format addFormat(@RequestBody Format format ) {
+		
+		return formatService.addFormat(format);
+	}
+	
+	@DeleteMapping("deleteFormat")
+	public String deleteFormat(@RequestParam long formatId) {
+		return formatService.deleteFormat(formatId);
 	}
 }

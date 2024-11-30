@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -56,10 +57,13 @@ public class Deck {
 	@Enumerated(EnumType.STRING)
 	private EnumFormat format;
 	
-	@Lob
-	@Column(name = "couleurs", nullable = false, unique = false)
-	@Enumerated(EnumType.STRING)
-	private List<EnumColor> colors;
+	@ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+        name = "Decks_Colors", 
+        joinColumns = { @JoinColumn(name = "deck_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "color_id") }
+    )	
+	private List<Color> colors = new ArrayList<>();
 	
 	@Column(name="cout_mana")
 	private Float manaCost;

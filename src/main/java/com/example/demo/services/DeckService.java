@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
-import com.example.demo.enums.Edition;
+import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
 import com.example.demo.enums.UserActivity;
@@ -105,7 +105,7 @@ public class DeckService implements IDeckService {
 	@Override
 	public List<Card> getCardsByFilterForDeck (Long deckId, String name, Long manaCostMin, Long manaCostMax,
 			Float valueMin, Float valueMax, List<CardType> types,
-			List <Rarity> rarities, List<Edition> editions) {
+			List <Rarity> rarities, List<EnumEdition> editions) {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
 		
@@ -128,7 +128,7 @@ public class DeckService implements IDeckService {
 	
 	@Override
 	public List<Card> getCommanderByFilterForDeck (Long deckId, String name, Long manaCostMin, Long manaCostMax,
-			Float valueMin, Float valueMax, List<Rarity> rarities, List<Edition> editions) {
+			Float valueMin, Float valueMax, List<Rarity> rarities, List<EnumEdition> editions) {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
 		List<Card> cardsFind = null;

@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "couleur")
+@Table(name = "color")
 @Builder
 
 public class Color {
@@ -35,6 +35,9 @@ public class Color {
 	
 	@ManyToMany(mappedBy = "colors")
 	private List<Card> cards;
+	
+	@ManyToMany(mappedBy = "colors")
+	private List<Deck> decks;
 
 
 }

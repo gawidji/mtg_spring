@@ -1,21 +1,15 @@
 package com.example.demo.entities;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.example.demo.enums.Edition;
-import com.example.demo.enums.EnumFormat;
+import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.Rarity;
 import com.example.demo.enums.CardType;
-import com.example.demo.enums.EnumColor;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,9 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -64,10 +56,13 @@ public class Card {
 	@Column(name = "valeur", unique = false)
 	private Float value;
 	
-	@ElementCollection
-	@Column(name = "formats_autorises", nullable= true, unique = false)
-	@Enumerated(EnumType.STRING)
-	private List<EnumFormat> formats;
+	@ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+        name = "Cards_Formats", 
+        joinColumns = { @JoinColumn(name = "card_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "format_id") }
+    )	
+	private List<Format> formats = new ArrayList<>();
 	
 	
 	@ManyToMany(cascade = { CascadeType.ALL })
@@ -87,7 +82,7 @@ public class Card {
 	private Rarity rarity;
 	
 	@Enumerated(EnumType.STRING)
-	private Edition edition;
+	private EnumEdition edition;
 	
 	
 	@ManyToMany(mappedBy = "cartes")

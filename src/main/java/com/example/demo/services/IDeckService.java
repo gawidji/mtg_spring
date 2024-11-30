@@ -7,7 +7,7 @@ import com.example.demo.entities.Card;
 import com.example.demo.entities.Deck;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
-import com.example.demo.enums.Edition;
+import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
 
@@ -20,9 +20,9 @@ public interface IDeckService {
 	Deck updateDeck(Long deckID, Deck deckUpdate);
 
 	List<Card> getCardsByFilterForDeck(Long deckId, String name, Long manaCostMin, Long manaCostMax, Float valueMin,
-										Float valueMax, List<CardType> types, List<Rarity> rarities, List<Edition> editions);	
+										Float valueMax, List<CardType> types, List<Rarity> rarities, List<EnumEdition> editions);	
 	List<Card> getCommanderByFilterForDeck(Long deckId, String name, Long manaCostMin, Long manaCostMax, Float valueMin,
-			Float valueMax, List<Rarity> rarities, List<Edition> editions);
+			Float valueMax, List<Rarity> rarities, List<EnumEdition> editions);
 	
 	Deck addCardOnDeck(Long cardId, Long deckId);
 	Deck addCommanderOnDeck(Long cardId, Long deckId);

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,16 +17,13 @@ import com.example.demo.entities.Deck;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
-import com.example.demo.enums.Edition;
+import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
-import com.example.demo.repositories.CardRepository;
 import com.example.demo.repositories.DeckRepository;
-import com.example.demo.services.AuthenticationService;
 import com.example.demo.services.CardService;
 import com.example.demo.services.DeckService;
 import com.example.demo.services.IAuthenticationService;
-import com.example.demo.services.IDeckBuilderService;
 
 @RestController
 @RequestMapping("f_all")
@@ -75,7 +71,7 @@ public class AllController {
 			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
 			@RequestParam(required = false) List<EnumFormat> formats,
 			@RequestParam(required = false)List<EnumColor> colors, @RequestParam(required = false) List<CardType> types,
-			@RequestParam(required = false)List<Rarity> rarities, @RequestParam(required = false) List<Edition> editions) {
+			@RequestParam(required = false)List<Rarity> rarities, @RequestParam(required = false) List<EnumEdition> editions) {
 		return cardService.getCardsByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors, types, rarities, editions);
 	}
 	
@@ -84,12 +80,15 @@ public class AllController {
 		return deckRepository.findById(deckId);
 	}
 	
-	@Autowired
-	private CardRepository cardRepository;
 	
-	@GetMapping("getCardsColors")
-	public List<Card> getCardsByColors (@RequestParam List<EnumColor> listColors) {
-		return cardRepository.findByColor(listColors);
+	@GetMapping("getCardsByColors")
+	public List<Card> getCardsByColors (@RequestParam List<EnumColor> colors) {
+		return cardService.findByColors(colors);
+	}
+	
+	@GetMapping("getCardsByFormats")
+	public List<Card> getCardsByFormats (@RequestParam List<EnumFormat> formats) {
+		return cardService.findByFormats(formats);
 	}
 
 }

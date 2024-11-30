@@ -1,24 +1,25 @@
 package com.example.demo.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Color;
+import com.example.demo.entities.Format;
 import com.example.demo.entities.Deck;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
-import com.example.demo.enums.Edition;
+import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
-import com.example.demo.register.CardRegister;
 import com.example.demo.repositories.CardRepository;
 import com.example.demo.repositories.ColorRepository;
 import com.example.demo.repositories.DeckRepository;
+import com.example.demo.repositories.FormatRepository;
 
 @Service
 public class CardService implements ICardService {
@@ -31,16 +32,24 @@ public class CardService implements ICardService {
 	
 	@Autowired
 	private ColorRepository colorRepository;
+	
+	@Autowired
+	private FormatRepository formatRepository;
 
 	//Rajouter les attributs image dés que possible dans les méthodes add
 	
 	
 	@Override
-	public Card addCard(Card card, List<Color> cardColors ) {
+	public Card addCard(Card card, List<Color> cardColors, List<Format> cardFormats ) {
 		
 		for (Color color : cardColors) {
 			
-			card.getColors().addAll(colorRepository.findByName(color.getName()));
+			card.getColors().add(colorRepository.findByName(color.getName()));
+		}
+		
+		for (Format format : cardFormats) {
+			
+			card.getFormats().add(formatRepository.findByName(format.getName()));
 		}
 		
 		return cardRepository.save(card);
@@ -105,7 +114,7 @@ public class CardService implements ICardService {
 	public List<Card> getAllCards() {
 		return cardRepository.findAll();
 	}
-	
+	/*
 	@Override
 	public List<EnumFormat> getCardFormats(Long cardID) {
 		Optional<Card> card = cardRepository.findById(cardID);
@@ -114,13 +123,43 @@ public class CardService implements ICardService {
 		}
 		throw new RuntimeException("Carte non trouvée");
 	}
+	*/
 	
 	@Override
 	public List<Card> getCardsByFilter (String name,  Long manaCostMin, Long manaCostMax, 
-			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors, List<CardType> types, List<Rarity> rarities, List<Edition> editions) {
+			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors, List<CardType> types, List<Rarity> rarities, List<EnumEdition> editions) {
 		return cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, types, rarities, editions);
 	}
 	// Filtre les cartes par tous les attributs potentiellement entrés en paramètres
+	
+	
+	@Override
+	public List<Card> findByColors(List<EnumColor> colors) {
+		
+		List<Color> colorsFind = new ArrayList<>();	 
+
+		for (EnumColor color : colors) {
+			
+			colorsFind.add(colorRepository.findByName(color));
+		}
+		
+		return cardRepository.findByColorsIn(colorsFind);
+	}
+	
+	
+	@Override
+	public List<Card> findByFormats(List<EnumFormat> formats) {
+		
+		List<Format> formatsFind = new ArrayList<>();	 
+
+		for (EnumFormat format : formats) {
+			
+			formatsFind.add(formatRepository.findByName(format));
+		}
+		
+		return cardRepository.findByFormatsIn(formatsFind);
+	}
+		
 		
 	
 	

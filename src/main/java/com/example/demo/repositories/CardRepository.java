@@ -1,17 +1,16 @@
 package com.example.demo.repositories;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.demo.entities.Card;
+import com.example.demo.entities.Color;
+import com.example.demo.entities.Format;
 import com.example.demo.enums.CardType;
-import com.example.demo.enums.EnumColor;
-import com.example.demo.enums.Edition;
-import com.example.demo.enums.EnumFormat;
+import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.Rarity;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
@@ -45,11 +44,11 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 				@Param("valueMax") Float valueMax,
 		        @Param("types") List<CardType> types,
 		        @Param("rarities") List<Rarity> rarities,
-		        @Param("editions") List<Edition> editions);
+		        @Param("editions") List<EnumEdition> editions);
 	
-	/*
-	@Query("SELECT c FROM Card c JOIN c.oneOrManyColors Colors WHERE Colors.name IN :colors")
-	List<Card> findByColor(@Param("colors") List<EnumColor> colors);
-	*/
+	
+	
+	List<Card> findByColorsIn(List<Color> colors);
+	List<Card> findByFormatsIn(List<Format> formats);	
 
 }

@@ -20,6 +20,6 @@ public class CardRegister {
 	
 	private List<Color> colors;
 	
-	// private List<Format> formats;
+	private List<Format> formats;
 
 }

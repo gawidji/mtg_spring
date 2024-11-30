@@ -17,7 +17,7 @@ import com.example.demo.entities.Card;
 import com.example.demo.entities.Deck;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
-import com.example.demo.enums.Edition;
+import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.Rarity;
 import com.example.demo.services.IDeckBuilderService;
 import com.example.demo.services.IDeckService;
@@ -68,7 +68,7 @@ public class UserController {
 			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
 			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
 			@RequestParam(required = false) List <CardType> types, 
-			@RequestParam(required = false) List <Rarity> rarities, @RequestParam(required = false) List<Edition> editions) {
+			@RequestParam(required = false) List <Rarity> rarities, @RequestParam(required = false) List<EnumEdition> editions) {
 		return iDeckService.getCardsByFilterForDeck(deckId, name, manaCostMin, manaCostMax, valueMin, valueMax, types, rarities, editions);
 	}
 	
@@ -76,7 +76,7 @@ public class UserController {
 	public List<Card> getCommanderByFilterForDeck(@RequestParam Long deckId, @RequestParam(required = false) String name,
 			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
 			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax, 
-			@RequestParam(required = false) List <Rarity> rarities,@RequestParam(required = false) List<Edition> editions) {
+			@RequestParam(required = false) List <Rarity> rarities,@RequestParam(required = false) List<EnumEdition> editions) {
 			return iDeckService.getCommanderByFilterForDeck(deckId, name, manaCostMin, manaCostMax,  valueMin, valueMax, rarities, editions);
 	}
 

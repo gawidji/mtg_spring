@@ -1,6 +1,6 @@
 package com.example.demo.enums;
 
-public enum Edition {
+public enum EnumEdition {
 	
 	
 	LES_FRICHES_D_ELDRAINE ("Les Friches d'Eldaines"),
@@ -12,7 +12,7 @@ public enum Edition {
 	
 	private String value;
 
-	private Edition(String value) {
+	private EnumEdition(String value) {
 		this.value = value;
 	}
 
