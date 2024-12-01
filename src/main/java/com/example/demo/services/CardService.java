@@ -127,8 +127,32 @@ public class CardService implements ICardService {
 	
 	@Override
 	public List<Card> getCardsByFilter (String name,  Long manaCostMin, Long manaCostMax, 
-			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors, List<CardType> types, List<Rarity> rarities, List<EnumEdition> editions) {
-		return cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, types, rarities, editions);
+			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors, 
+			List<CardType> types, List<Rarity> rarities, List<EnumEdition> editions) {
+		
+		List<Color> colorsEntities = new ArrayList<>();	
+		if(colors != null) {
+			for (EnumColor color : colors) {	
+				colorsEntities.add(colorRepository.findByName(color));
+			}
+		}
+		else {
+			colorsEntities = null;
+		}
+		
+		
+		List<Format> formatsEntities = new ArrayList<>();	
+		if(formats != null) {
+			for (EnumFormat format : formats) {
+				formatsEntities.add(formatRepository.findByName(format));
+			}
+		}
+		else {
+			formatsEntities = null;
+		}
+		
+		return cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, types,
+				rarities, editions, colorsEntities, formatsEntities);
 	}
 	// Filtre les cartes par tous les attributs potentiellement entrés en paramètres
 	

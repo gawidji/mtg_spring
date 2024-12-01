@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.DeckCreator;
+import com.example.demo.entities.Format;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
@@ -17,10 +18,13 @@ import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.entities.Card;
+import com.example.demo.entities.Color;
 import com.example.demo.entities.Deck;
 import com.example.demo.repositories.CardRepository;
+import com.example.demo.repositories.ColorRepository;
 import com.example.demo.repositories.DeckBuilderRepository;
 import com.example.demo.repositories.DeckRepository;
+import com.example.demo.repositories.FormatRepository;
 
 
 @Service
@@ -35,24 +39,38 @@ public class DeckService implements IDeckService {
 	@Autowired
 	CardRepository cardRepository;
 	
-	public Deck addDeck(Long userId, Deck deck) {
+	@Autowired
+	private ColorRepository colorRepository;
+	
+	@Autowired
+	private FormatRepository formatRepository;
+	
+	
+
+	@Override
+	public Deck addDeck(Long userId, Deck deck, List<Color> deckColors ) {
+		
 		Optional<DeckCreator> dbuilder = deckBuilderRepository.findById(userId);
 		
 		if(dbuilder.isPresent()) {
 		
-		DeckCreator db  = dbuilder.get();
-		Deck d = Deck.builder().name(deck.getName()).format(deck.getFormat()).colors(deck.getColors())
-				.isPublic(false).image(deck.getImage()).deckBuilder(db)
-				.build();
-		
-		db.setActivity(UserActivity.CREATOR);
-		
-		deckBuilderRepository.save(db);	
-		return deckRepository.save(d); 
+			DeckCreator dbuilderFind  = dbuilder.get();
+			for (Color color : deckColors) {
+				
+				deck.getColors().add(colorRepository.findByName(color.getName()));
+				
+			}
+			deck.setIsPublic(false);
+			deck.setDeckBuilder(dbuilderFind);
+			dbuilderFind.setActivity(UserActivity.CREATOR);
+			
+			deckBuilderRepository.save(dbuilderFind);
+			return deckRepository.save(deck);
+
 		}
 		throw new RuntimeException("Utilisateur non trouvé");
+			
 	}
-	// Créé un deck pour un user 
 	
 	
 	@Override
@@ -109,16 +127,18 @@ public class DeckService implements IDeckService {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
 		
-		List<EnumFormat> formatDeck = new ArrayList<>();
-		formatDeck.add(deck.get().getFormat());
-		
-		List<EnumColor> colorsDeck = new ArrayList<>();
+		List<Color> colorsDeck = new ArrayList<>();
 		colorsDeck.addAll(deck.get().getColors());
+		
+		
+		List<Format> formatDeck = new ArrayList<>();
+		formatDeck.add(formatRepository.findByName(deck.get().getFormat()));
+		
 		
 		if(deck.isPresent()) {
 			
-			return cardRepository.findByOptionalAttribute(name,manaCostMin, manaCostMax, valueMin, valueMax,
-			formatDeck, colorsDeck, types, rarities, editions);
+			return cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, types, 
+					rarities, editions, colorsDeck, formatDeck);
 			
 		}
 		throw new RuntimeException("Deck non trouvé");
@@ -131,28 +151,25 @@ public class DeckService implements IDeckService {
 			Float valueMin, Float valueMax, List<Rarity> rarities, List<EnumEdition> editions) {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
-		List<Card> cardsFind = null;
 		
 		List<CardType> enumCommander = new ArrayList<>();
 		enumCommander.add(CardType.CREATURE_LEGENDAIRE);
 		
-		List<EnumFormat> formatDeck = new ArrayList<>();
-		formatDeck.add(deck.get().getFormat());
-		
-		List<EnumColor> colorsDeck = new ArrayList<>();
+		List<Color> colorsDeck = new ArrayList<>();
 		colorsDeck.addAll(deck.get().getColors());
 		
+		
+		List<Format> formatDeck = new ArrayList<>();
+		formatDeck.add(formatRepository.findByName(deck.get().getFormat()));
+		
+		
 		if(deck.isPresent()) {
-				
-			cardsFind = cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax,
-			formatDeck, colorsDeck, enumCommander, rarities, editions);
 			
-			return cardsFind;
+			return cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, enumCommander, 
+					rarities, editions, colorsDeck, formatDeck);
+			
 		}
 		throw new RuntimeException("Deck non trouvé");
-		
-		
-		
 		
 	}
 	
@@ -166,8 +183,8 @@ public class DeckService implements IDeckService {
 			
 			boolean communColor = false;
 			
-			for (EnumColor deckColor : deckToTarget.get().getColors()) {
-				for (EnumColor cardColor : cardToAdd.get().getColors()) {
+			for (Color deckColor : deckToTarget.get().getColors()) {
+				for (Color cardColor : cardToAdd.get().getColors()) {
 					if(deckColor.equals(cardColor)) {
 						communColor = true;
 						break;
@@ -393,7 +410,17 @@ public class DeckService implements IDeckService {
 	@Override
 	public List<Deck> getDecksByFilter (String name, Long manaCostMin, Long manaCostMax, 
 			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors) {
-		return deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors, true);
+		
+		List<Color> colorsEntities = new ArrayList<>();	
+		if(colors != null) {
+			for (EnumColor color : colors) {	
+				colorsEntities.add(colorRepository.findByName(color));
+			}
+		}
+		else {
+			colorsEntities = null;
+		}
+		return deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, true, colorsEntities);
 	}
 	
 

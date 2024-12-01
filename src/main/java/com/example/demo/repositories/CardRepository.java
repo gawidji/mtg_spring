@@ -14,6 +14,8 @@ import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.Rarity;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
+	
+	
 	/*
 	Optional<Card> findByName(String nom);
 	List<Card> findByNameContaining(String nom);
@@ -28,6 +30,8 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	
 	
 	@Query("SELECT c FROM Card c " +
+				"LEFT JOIN c.colors Color " +
+		       "LEFT JOIN c.formats Format " +
 		       "WHERE (:name IS NULL OR c.name LIKE %:name%) " +
 		       "AND (:manaCostMin IS NULL OR c.manaCost > :manaCostMin) " +
 		       "AND (:manaCostMax IS NULL OR c.manaCost < :manaCostMax) " +
@@ -35,7 +39,10 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 		       "AND (:valueMax IS NULL OR c.value < :valueMax) " +
 		       "AND (:types IS NULL OR c.type IN :types) " +
 		       "AND (:rarities IS NULL OR c.rarity IN :rarities) " +
-		       "AND (:editions IS NULL OR c.edition IN :editions) ")
+		       "AND (:editions IS NULL OR c.edition IN :editions) " +
+		       "AND (:colors IS NULL OR Color IN :colors) " +
+		       "AND (:formats IS NULL OR Format IN :formats) "
+			)
 		List<Card> findByOptionalAttribute(
 				@Param("name") String name,
 				@Param("manaCostMin") Long manaCostMin,
@@ -44,7 +51,10 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 				@Param("valueMax") Float valueMax,
 		        @Param("types") List<CardType> types,
 		        @Param("rarities") List<Rarity> rarities,
-		        @Param("editions") List<EnumEdition> editions);
+		        @Param("editions") List<EnumEdition> editions,
+		        @Param("colors") List<Color> colors,
+		        @Param("formats") List<Format> formats
+				);
 	
 	
 	

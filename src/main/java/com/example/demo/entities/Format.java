@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.example.demo.enums.EnumFormat;
@@ -25,8 +26,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "format")
 @Builder
-public class Format {
+public class Format implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

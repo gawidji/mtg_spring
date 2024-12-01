@@ -19,6 +19,7 @@ import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.Rarity;
+import com.example.demo.register.DeckRegister;
 import com.example.demo.services.IDeckBuilderService;
 import com.example.demo.services.IDeckService;
 
@@ -35,6 +36,7 @@ public class UserController {
 	private IDeckService iDeckService;
 	
 	
+	
 	@PutMapping("updateAccount")
 	public DeckCreator updateAccount(@RequestParam String email, @RequestBody DeckCreator deckBuilder) {
 		return iDeckBuilderService.updateAccount(email, deckBuilder);
@@ -49,8 +51,8 @@ public class UserController {
 	
 	
 	@PostMapping("addDeck")
-	public Deck addDeck(@RequestParam Long userId, @RequestBody Deck deck) {
-		return iDeckService.addDeck(userId, deck);
+	public Deck addDeck(@RequestParam Long userId, @RequestBody DeckRegister deckRegister) {
+		return iDeckService.addDeck(userId, deckRegister.getDeck(), deckRegister.getColors());
 	}
 	
 	@DeleteMapping("deleteDeck")

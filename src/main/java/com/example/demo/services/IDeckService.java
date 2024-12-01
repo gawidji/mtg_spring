@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.example.demo.entities.Card;
+import com.example.demo.entities.Color;
 import com.example.demo.entities.Deck;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
@@ -15,7 +16,7 @@ public interface IDeckService {
 	
 	// Methodes f_user
 	
-	Deck addDeck(Long userId, Deck deck);
+	Deck addDeck(Long userId, Deck deck, List<Color> deckColors);
 	String deleteDeck(Long deckID);
 	Deck updateDeck(Long deckID, Deck deckUpdate);
 
