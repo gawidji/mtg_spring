@@ -4,19 +4,22 @@ import java.util.List;
 import java.util.Set;
 
 import com.example.demo.entities.Card;
-import com.example.demo.entities.Color;
 import com.example.demo.entities.Deck;
+import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
+import com.example.demo.register.DeckRegister;
 
 public interface IDeckService {
 	
 	// Methodes f_user
 	
-	Deck addDeck(Long userId, Deck deck, List<Color> deckColors);
+	Deck addDeckWithForm (DeckCreator dbuilder, DeckRegister deckRegister );
+	
+	
 	String deleteDeck(Long deckID);
 	Deck updateDeck(Long deckID, Deck deckUpdate);
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.example.demo.entities.Color;
 import com.example.demo.entities.Deck;
-
+import com.example.demo.enums.EnumFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +15,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DeckRegister {
 	
-	private Deck deck;
+	// private Deck deck;
 	
-	private List<Color> colors;
+	private String name;
+	
+	private String image;
+	
+	private EnumFormat format;
+	
+	private boolean bleu;
+	private boolean blanc;
+	private boolean vert;
+	private boolean rouge;
+	private boolean noir;
+	private boolean incolore;
+
+	
+	// private List<Color> colors;
 	
 }

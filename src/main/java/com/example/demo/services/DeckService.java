@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.Rarity;
 import com.example.demo.enums.UserActivity;
+import com.example.demo.register.DeckRegister;
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Color;
 import com.example.demo.entities.Deck;
@@ -46,25 +48,51 @@ public class DeckService implements IDeckService {
 	private FormatRepository formatRepository;
 	
 	
-
 	@Override
-	public Deck addDeck(Long userId, Deck deck, List<Color> deckColors ) {
+	public Deck addDeckWithForm (DeckCreator dbuilder, DeckRegister deckRegister ) {
 		
-		Optional<DeckCreator> dbuilder = deckBuilderRepository.findById(userId);
 		
-		if(dbuilder.isPresent()) {
-		
-			DeckCreator dbuilderFind  = dbuilder.get();
-			for (Color color : deckColors) {
-				
-				deck.getColors().add(colorRepository.findByName(color.getName()));
-				
-			}
-			deck.setIsPublic(false);
-			deck.setDeckBuilder(dbuilderFind);
-			dbuilderFind.setActivity(UserActivity.CREATOR);
+		if(dbuilder != null) {
 			
-			deckBuilderRepository.save(dbuilderFind);
+			dbuilder.setActivity(UserActivity.CREATOR);
+			deckBuilderRepository.save(dbuilder);
+
+			
+			Deck deck = new Deck();
+			deck.setName(deckRegister.getName());
+			deck.setDateCreation(LocalDate.now());
+			deck.setImage(deckRegister.getImage());
+			deck.setFormat(deckRegister.getFormat());
+			deck.setIsPublic(false);
+			deck.setDeckBuilder(dbuilder);
+			
+			if(deckRegister.isBleu()) {
+				Color colorBleu = colorRepository.findByName(EnumColor.BLEU);
+				deck.getColors().add(colorBleu);
+			}
+			if(deckRegister.isBlanc()) {
+				Color colorBlanc = colorRepository.findByName(EnumColor.BLANC);
+				deck.getColors().add(colorBlanc);
+			}
+			if(deckRegister.isVert()) {
+				Color colorVert = colorRepository.findByName(EnumColor.VERT);
+				deck.getColors().add(colorVert);
+			}
+			if(deckRegister.isRouge()) {
+				Color colorRouge = colorRepository.findByName(EnumColor.ROUGE);
+				deck.getColors().add(colorRouge);
+			}
+			if(deckRegister.isNoir()) {
+				Color colorNoir = colorRepository.findByName(EnumColor.NOIR);
+				deck.getColors().add(colorNoir);
+			}
+			if(deckRegister.isIncolore()) {
+				Color colorIncolore = colorRepository.findByName(EnumColor.INCOLORE);
+				List<Color> color = new ArrayList<>();
+				color.add(colorIncolore);
+				deck.setColors(color);
+			}
+			
 			return deckRepository.save(deck);
 
 		}
@@ -420,7 +448,7 @@ public class DeckService implements IDeckService {
 		else {
 			colorsEntities = null;
 		}
-		return deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, true, colorsEntities);
+		return deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, true, formats, colorsEntities);
 	}
 	
 

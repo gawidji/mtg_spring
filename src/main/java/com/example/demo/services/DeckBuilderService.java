@@ -19,7 +19,7 @@ import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.enums.UserRole;
 import com.example.demo.repositories.DeckBuilderRepository;
-import com.example.demo.securityMalek.ConfigurePasswordEncoder;
+import com.example.demo.security.ConfigurePasswordEncoder;
 
 @Service
 //Obligatoire pour rendre le fichier visible

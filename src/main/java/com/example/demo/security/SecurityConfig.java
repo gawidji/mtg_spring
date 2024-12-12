@@ -3,45 +3,73 @@ package com.example.demo.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-/*
+
+
+// Specifie que le fichier est un fichier de configuration
 @Configuration
+
+// Ajoute les fonctionnalités de spring security
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 	
 	@Autowired
-	JwtAuthentificationFilter jwtAuthentificationFilter;
+    JwtAuthenticationFilter jwtAuthFilter;
+
+	@Autowired
+	UserDetailsService userDetailsService;
 	
 	@Autowired
-	AuthenticationProvider authenticationProvider;
+	ConfigurePasswordEncoder passwordEncoder;
+	
+	@Bean 
+	public DaoAuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(passwordEncoder);
+		return authProvider;
+	}
 	
 	// Appel de la méthode filterChain de Spring Security qui va intercepter les requetes http et les filtrer
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-        		// Desactivation de csrf pour que les requetes ne soient plus dans des sessions indépendantes (stateless)
-        		//le serveur retient l'identité de l'user après son auth 
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/f_all/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
-               // les requetes qui commencent par "auth" (connection, inscription) peuvent etre faites par n'importe qui
-               // les autres requetes peuvent etre faites que si on est authentifié
-                )
-                // Utilise un AuthenticationProvider personnalisé pour gérer l'authentification
-                .authenticationProvider(authenticationProvider)
-                // Ajoute un filtre personnalisé pour le jwt token
-                .addFilterBefore(jwtAuthentificationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+    	
+    	// Desactivation de csrf pour que les requetes ne soient plus dans des sessions indépendantes 
+		//le serveur retient l'identité de l'user après son auth (identification stateless)
+    return	httpSecurity.csrf(csrf -> csrf.disable())
+    	.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/f_all/**").permitAll()
+                .requestMatchers("/f_admin/**").permitAll()
+                .anyRequest()
+                .authenticated()
+
+        )
+        .authenticationProvider(authenticationProvider())
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        .build();
+}
+    
+    
+    // Méthode d'encodage du password a appelé dans la méthode de création d'user
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder () {
+    	return new BCryptPasswordEncoder();
+    }
+    
+    // Méthode pour sécuriser l'auth lors du login 
+    @Bean 
+    public AuthenticationManager authenticationManager (AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    	return authenticationConfiguration.getAuthenticationManager();
     }
 }
-*/

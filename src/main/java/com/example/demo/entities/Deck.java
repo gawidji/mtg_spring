@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +46,7 @@ public class Deck {
 	
 	@Column(name = "date_création")
 	@Temporal(TemporalType.DATE)
-	private Date dateCreation;
+	private LocalDate dateCreation;
 	
 	@Column(name = "image")
 	private String image;

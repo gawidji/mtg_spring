@@ -1,9 +1,13 @@
 package com.example.demo.web;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +24,7 @@ import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.Rarity;
 import com.example.demo.register.DeckRegister;
+import com.example.demo.repositories.DeckBuilderRepository;
 import com.example.demo.services.IDeckBuilderService;
 import com.example.demo.services.IDeckService;
 
@@ -34,7 +39,8 @@ public class UserController {
 	private IDeckBuilderService iDeckBuilderService;
 	@Autowired
 	private IDeckService iDeckService;
-	
+	@Autowired
+	private DeckBuilderRepository deckBuilderRepository;
 	
 	
 	@PutMapping("updateAccount")
@@ -51,8 +57,17 @@ public class UserController {
 	
 	
 	@PostMapping("addDeck")
-	public Deck addDeck(@RequestParam Long userId, @RequestBody DeckRegister deckRegister) {
-		return iDeckService.addDeck(userId, deckRegister.getDeck(), deckRegister.getColors());
+	public ResponseEntity addDeck( Authentication authentication, @RequestBody DeckRegister deckRegister) {
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		
+		if(user.isPresent()) {
+			iDeckService.addDeckWithForm(user.get(), deckRegister);
+			return ResponseEntity.ok("Nouveau deck créé : " + deckRegister.getName() );
+		}
+		
+    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+
 	}
 	
 	@DeleteMapping("deleteDeck")

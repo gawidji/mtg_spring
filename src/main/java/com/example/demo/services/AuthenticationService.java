@@ -1,6 +1,8 @@
 package com.example.demo.services;
 
+import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,7 +14,8 @@ import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.enums.UserRole;
 import com.example.demo.repositories.DeckBuilderRepository;
-import com.example.demo.securityMalek.ConfigurePasswordEncoder;
+import com.example.demo.security.ConfigurePasswordEncoder;
+import com.example.demo.security.JwtService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +34,9 @@ public class AuthenticationService implements IAuthenticationService {
 	// Appel de ConfigurePasswordEncoder pour avoir notre encodage personalisé plutot que le PasswordEncoder d'origine
 	
 	@Autowired
+	private  JwtService jwtService;
+	
+	@Autowired
 	private AuthenticationManager authenticationManager;
 	// Méthode d'auth conçue dans la securityConifg
 	
@@ -38,7 +44,7 @@ public class AuthenticationService implements IAuthenticationService {
 	public DeckCreator inscription(DeckCreator deckBuilder) {
 	
 		DeckCreator db = DeckCreator.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(passwordEncoder.encode(deckBuilder.getPassword()))
-				.avatar(deckBuilder.getAvatar())
+				.avatar(deckBuilder.getAvatar()).dateSign((LocalDate.now()))
 				.activity(UserActivity.VIEWVER).role(UserRole.USER)
 				.build();
 		
@@ -61,9 +67,22 @@ public class AuthenticationService implements IAuthenticationService {
 	public String connexion(Map<String, String> request) {
 		String email = request.get("email");
        String password = request.get("password");
+       
+       Optional<DeckCreator> user = deckBuilderRepository.findByEmail(email);
+       
+       if(user.isPresent()) {
+	       DeckCreator userFind = user.get();
+	
+	       if(passwordEncoder.matches(password, userFind.getPassword())) {
+	    	   String jwt = jwtService.generateToken(userFind);
+	    	   return "Connexion réussie " + jwt;
+	    	}
+       }
+    	   
+       	return "echec de la connexion";
+       /*
 		try {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        System.out.println(authentication);
 		return "Vous etes connecté";
 		// UsernamePasswordAuthenticationToken implémente une interface authentication 
 		// On lui donne des données à encapsuler (email et password) qu'elle va transmettre à authenticationManager
@@ -74,6 +93,7 @@ public class AuthenticationService implements IAuthenticationService {
 			System.out.println(e);
 			return "Nom d'utilisateur ou mot de passe incorrect";
 					} 
+					*/
 	}
 
 }

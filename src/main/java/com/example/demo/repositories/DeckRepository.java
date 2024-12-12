@@ -29,16 +29,17 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 		       "AND (:manaCostMax IS NULL OR d.manaCost < :manaCostMax) " +
 		       "AND (:valueMin IS NULL OR d.value > :valueMin) " +
 		       "AND (:valueMax IS NULL OR d.value < :valueMax) " +
-		       "AND (:formats IS NULL OR d.format IN :formats) " +
-		       "AND (:isPublic IS NULL OR d.isPublic = :isPublic)")
+		       "AND (:isPublic IS NULL OR d.isPublic = :isPublic)" +
+		   		"AND (:formats IS NULL OR d.format IN :formats) " +
+		   		"AND (:colors IS NULL OR Color IN :colors) ")
 				List<Deck> findByOptionalAttribute(
 				@Param("name") String name,
 				@Param("manaCostMin") Long manaCostMin,
 				@Param("manaCostMax") Long manaCostMax,
 				@Param("valueMin") Float valueMin,
 				@Param("valueMax") Float valueMax,
-				@Param("formats") List<EnumFormat> formats,
 				@Param("isPublic") boolean isPublic,
+				@Param("formats") List<EnumFormat> formats,
 		        @Param("colors") List<Color> colors
 				);
 	
