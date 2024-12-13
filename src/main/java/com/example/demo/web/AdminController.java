@@ -3,9 +3,11 @@ package com.example.demo.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +25,7 @@ import com.example.demo.services.ColorService;
 import com.example.demo.services.FormatService;
 import com.example.demo.services.IAuthenticationService;
 import com.example.demo.services.ICardService;
-import com.example.demo.services.IDeckBuilderService;
+import com.example.demo.services.IAccountService;
 
 @RestController
 @RequestMapping("f_admin")
@@ -32,7 +34,7 @@ public class AdminController {
 	// Les requetes seulement effectuées par l'admin
 	
 	@Autowired
-	private IDeckBuilderService iDeckBuilderService;
+	private IAccountService iAccountService;
 	
 	@Autowired
 	private IAuthenticationService iAuthenticationService;
@@ -47,65 +49,73 @@ public class AdminController {
 	FormatService formatService;
 	
 	@PostMapping("addAdmin")
-	public DeckCreator addAdmin(@RequestBody DeckCreator db) {
+	public DeckCreator addAdmin(Authentication authentication, @RequestBody DeckCreator db) {
 		return iAuthenticationService.addAdmin(db);
 		
 	}
 	
 	@DeleteMapping("deleteAccount")
-	public String deleteAccount(@RequestParam Long dbID) {
-		return iDeckBuilderService.deleteDeckBuilder(dbID);
+	public String deleteAccount(Authentication authentication, @RequestParam Long dbID) {
+		return iAccountService.deleteDeckBuilder(dbID);
 	}
 	
 	@GetMapping("getUsers")
-	public List <DeckCreator> getDeckBuildersByFilter ( @RequestParam(required=false) String pseudo, @RequestParam(required=false) String email,
+    @PreAuthorize("hasAuthority('ADMIN')")
+	public List <DeckCreator> getDeckBuildersByFilter ( Authentication authentication, @RequestParam(required=false) String pseudo, @RequestParam(required=false) String email,
 	@RequestParam(required=false) List<UserActivity> activities) {
-		return iDeckBuilderService.getDeckBuildersByFilter(pseudo, email, activities);
+		return iAccountService.getDeckBuildersByFilter(pseudo, email, activities);
 	}
 	
-	@GetMapping("getAdmins")
-	public List<DeckCreator> getAdmins(@RequestParam(required=false) String pseudo, @RequestParam(required=false) String email) {
-		return iDeckBuilderService.getAdmins(pseudo, email);
-	}
 	
 	@PostMapping("addCard")
-	public Card addCard(@RequestBody CardRegister cardRegister ) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+	public ResponseEntity addCard(Authentication authentication, @RequestBody CardRegister cardRegister ) {
 		
-		return iCardService.addCard(cardRegister.getCard(), cardRegister.getColors(), cardRegister.getFormats() );
+		 iCardService.addCard(cardRegister.getCard(), cardRegister.getColors(), cardRegister.getFormats());
+		 return ResponseEntity.ok("Carte ajoutée : " + cardRegister.getCard() );
 	}
 	
 	@PutMapping("updateCard")
-	public Card updateCard (Long cardID, Card cardUpdate) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+	public Card updateCard (Authentication authentication, Long cardID, Card cardUpdate) {
 		
 		return iCardService.updateCard(cardID, cardUpdate);
 	}
 	
 	@DeleteMapping("deleteCard")
-	public String deleteCard(@RequestParam long cardID) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+	public String deleteCard(Authentication authentication, @RequestParam long cardID) {
 		return iCardService.deleteCard(cardID);
 	}
 	
 	
-	@PostMapping("addColor")
-	public Color addColor(@RequestBody Color color ) {
+	@PostMapping("addColors")
+    @PreAuthorize("hasAuthority('ADMIN')")
+	public ResponseEntity addColors(Authentication authentication, @RequestBody List <Color> colors ) {
 		
-		return colorService.addColor(color);
+		 colorService.addColor(colors);
+		 return ResponseEntity.ok("Couleurs ajoutées");
+
 	}
 	
 	@DeleteMapping("deleteColor")
+    @PreAuthorize("hasAuthority('ADMIN')")
 	public String deleteColor(@RequestParam long colorId) {
 		return colorService.deleteColor(colorId);
 	}
 	
 	
-	@PostMapping("addFormat")
-	public Format addFormat(@RequestBody Format format ) {
+	@PostMapping("addFormats")
+    @PreAuthorize("hasAuthority('ADMIN')")
+	public ResponseEntity addFormat(Authentication authentication, @RequestBody List<Format> formats ) {
 		
-		return formatService.addFormat(format);
+		formatService.addFormats(formats);
+		return ResponseEntity.ok("Formats ajoutés");
 	}
 	
 	@DeleteMapping("deleteFormat")
-	public String deleteFormat(@RequestParam long formatId) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+	public String deleteFormat(Authentication authentication, @RequestParam long formatId) {
 		return formatService.deleteFormat(formatId);
 	}
 }

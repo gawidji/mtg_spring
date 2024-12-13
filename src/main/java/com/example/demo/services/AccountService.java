@@ -23,7 +23,7 @@ import com.example.demo.security.ConfigurePasswordEncoder;
 
 @Service
 //Obligatoire pour rendre le fichier visible
-public class DeckBuilderService implements IDeckBuilderService, UserDetailsService  {
+public class AccountService implements IAccountService, UserDetailsService  {
 	
 	@Autowired
 	private DeckBuilderRepository deckBuilderRepository;
@@ -74,21 +74,7 @@ public class DeckBuilderService implements IDeckBuilderService, UserDetailsServi
 		throw new RuntimeException("Utilisateur non trouvé");
 	}
 	
-	/*
-
-	@Override
-	public Boolean isUserAdmin(Long id) {
-		Optional<DeckCreator> db = deckBuilderRepository.findById(id);
-		
-		if(db.isPresent()) {
-			if(db.get().getRole().equals(UserRole.ADMIN.toString())) {
-			return true;
-			}
-			return false;
-		}
-		throw new RuntimeException("Utilisateur non trouvé");
-	}
-	*/
+	
 	
 	@Override
 	public String deleteDeckBuilder(Long dbID) {
@@ -106,13 +92,9 @@ public class DeckBuilderService implements IDeckBuilderService, UserDetailsServi
 
 	@Override
 	public List<DeckCreator> getDeckBuildersByFilter (String pseudo, String email, List<UserActivity> activities) {
-		return deckBuilderRepository.findByOptionalAttribute(pseudo, email, activities, UserRole.USER) ;
+		return deckBuilderRepository.findByOptionalAttribute(pseudo, email, activities) ;
 	}
 	
-	@Override
-	public List<DeckCreator> getAdmins(String pseudo, String email) {		
-		return deckBuilderRepository.findByOptionalAttribute(pseudo, email, null, UserRole.ADMIN);
-	}
 
 	
 

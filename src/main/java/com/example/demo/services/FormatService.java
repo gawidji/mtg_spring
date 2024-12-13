@@ -1,5 +1,7 @@
 package com.example.demo.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +14,10 @@ public class FormatService {
 	@Autowired
 	private FormatRepository formatsRepository;
 	
-	public Format addFormat(Format format) {
-		return formatsRepository.save(format);
+	public void addFormats(List<Format> formats) {
+		for (Format format : formats) {
+			 formatsRepository.save(format);
+		}
 	}
 	
 	public String deleteFormat(Long formatId) {

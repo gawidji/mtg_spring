@@ -22,10 +22,10 @@ import com.example.demo.entities.Deck;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumEdition;
-import com.example.demo.enums.Rarity;
+import com.example.demo.enums.EnumRarity;
 import com.example.demo.register.DeckRegister;
 import com.example.demo.repositories.DeckBuilderRepository;
-import com.example.demo.services.IDeckBuilderService;
+import com.example.demo.services.IAccountService;
 import com.example.demo.services.IDeckService;
 
 @RestController
@@ -36,7 +36,7 @@ public class UserController {
 	// créer, modifier, rechercher des decks accessibles par les users auth
 	
 	@Autowired
-	private IDeckBuilderService iDeckBuilderService;
+	private IAccountService iDeckBuilderService;
 	@Autowired
 	private IDeckService iDeckService;
 	@Autowired
@@ -85,7 +85,7 @@ public class UserController {
 			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
 			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
 			@RequestParam(required = false) List <CardType> types, 
-			@RequestParam(required = false) List <Rarity> rarities, @RequestParam(required = false) List<EnumEdition> editions) {
+			@RequestParam(required = false) List <EnumRarity> rarities, @RequestParam(required = false) List<EnumEdition> editions) {
 		return iDeckService.getCardsByFilterForDeck(deckId, name, manaCostMin, manaCostMax, valueMin, valueMax, types, rarities, editions);
 	}
 	
@@ -93,7 +93,7 @@ public class UserController {
 	public List<Card> getCommanderByFilterForDeck(@RequestParam Long deckId, @RequestParam(required = false) String name,
 			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
 			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax, 
-			@RequestParam(required = false) List <Rarity> rarities,@RequestParam(required = false) List<EnumEdition> editions) {
+			@RequestParam(required = false) List <EnumRarity> rarities,@RequestParam(required = false) List<EnumEdition> editions) {
 			return iDeckService.getCommanderByFilterForDeck(deckId, name, manaCostMin, manaCostMax,  valueMin, valueMax, rarities, editions);
 	}
 

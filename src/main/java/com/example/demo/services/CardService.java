@@ -15,7 +15,7 @@ import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
-import com.example.demo.enums.Rarity;
+import com.example.demo.enums.EnumRarity;
 import com.example.demo.repositories.CardRepository;
 import com.example.demo.repositories.ColorRepository;
 import com.example.demo.repositories.DeckRepository;
@@ -128,7 +128,7 @@ public class CardService implements ICardService {
 	@Override
 	public List<Card> getCardsByFilter (String name,  Long manaCostMin, Long manaCostMax, 
 			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors, 
-			List<CardType> types, List<Rarity> rarities, List<EnumEdition> editions) {
+			List<CardType> types, List<EnumRarity> rarities, List<EnumEdition> editions) {
 		
 		List<Color> colorsEntities = new ArrayList<>();	
 		if(colors != null) {

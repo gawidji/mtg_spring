@@ -16,7 +16,7 @@ import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
-import com.example.demo.enums.Rarity;
+import com.example.demo.enums.EnumRarity;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.register.DeckRegister;
 import com.example.demo.entities.Card;
@@ -151,7 +151,7 @@ public class DeckService implements IDeckService {
 	@Override
 	public List<Card> getCardsByFilterForDeck (Long deckId, String name, Long manaCostMin, Long manaCostMax,
 			Float valueMin, Float valueMax, List<CardType> types,
-			List <Rarity> rarities, List<EnumEdition> editions) {
+			List <EnumRarity> rarities, List<EnumEdition> editions) {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
 		
@@ -176,7 +176,7 @@ public class DeckService implements IDeckService {
 	
 	@Override
 	public List<Card> getCommanderByFilterForDeck (Long deckId, String name, Long manaCostMin, Long manaCostMax,
-			Float valueMin, Float valueMax, List<Rarity> rarities, List<EnumEdition> editions) {
+			Float valueMin, Float valueMax, List<EnumRarity> rarities, List<EnumEdition> editions) {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
 		

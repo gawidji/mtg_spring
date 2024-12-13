@@ -19,7 +19,7 @@ import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
-import com.example.demo.enums.Rarity;
+import com.example.demo.enums.EnumRarity;
 import com.example.demo.repositories.DeckRepository;
 import com.example.demo.services.CardService;
 import com.example.demo.services.DeckService;
@@ -71,7 +71,7 @@ public class AllController {
 			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
 			@RequestParam(required = false) List<EnumFormat> formats,
 			@RequestParam(required = false)List<EnumColor> colors, @RequestParam(required = false) List<CardType> types,
-			@RequestParam(required = false)List<Rarity> rarities, @RequestParam(required = false) List<EnumEdition> editions) {
+			@RequestParam(required = false)List<EnumRarity> rarities, @RequestParam(required = false) List<EnumEdition> editions) {
 		return cardService.getCardsByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors, types, rarities, editions);
 	}
 	

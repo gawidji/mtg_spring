@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.example.demo.enums.EnumEdition;
-import com.example.demo.enums.Rarity;
+import com.example.demo.enums.EnumRarity;
 import com.example.demo.enums.CardType;
 
 import jakarta.persistence.CascadeType;
@@ -79,7 +79,7 @@ public class Card {
 	
 	@Column(name = "rareté", nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)
-	private Rarity rarity;
+	private EnumRarity rarity;
 	
 	@Enumerated(EnumType.STRING)
 	private EnumEdition edition;

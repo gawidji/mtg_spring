@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.UserActivity;
-import com.example.demo.enums.UserRole;
 
 
 @Repository
@@ -22,13 +21,11 @@ public interface DeckBuilderRepository extends JpaRepository<DeckCreator, Long> 
 	@Query("SELECT d FROM DeckCreator d " +
 		       "WHERE (:pseudo IS NULL OR d.pseudo LIKE %:pseudo%) " +
 		       "AND (:email IS NULL OR d.email LIKE %:email%) " +
-		       "AND (:activities IS NULL OR d.activity IN :activities) " + 
-		       "AND (:role IS NULL OR d.role = :role )")
+		       "AND (:activities IS NULL OR d.activity IN :activities) ")
 				List<DeckCreator> findByOptionalAttribute(
 		       @Param("pseudo") String pseudo,
 		       @Param("email") String email,
-		       @Param("activities") List<UserActivity> activities,
-		       @Param("role") UserRole role
+		       @Param("activities") List<UserActivity> activities
 		       );
 	
 }

@@ -1,11 +1,13 @@
 package com.example.demo.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.demo.enums.UserActivity;
@@ -19,6 +21,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -27,7 +30,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Data
 @Table(name = "deckbuilder")
@@ -61,13 +63,12 @@ public class DeckCreator implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private UserActivity activity;
 	
-	
+	@Lob
 	@Column(name = "role", nullable = false)
 	@Enumerated(EnumType.STRING)
-	private UserRole role;
+    private List<UserRole> roles = new ArrayList<>();
 	
-	
-	
+
 	
 	@OneToMany(mappedBy = "deckBuilder", cascade = CascadeType.ALL)
 	private Set<Deck> decks;
@@ -77,11 +78,15 @@ public class DeckCreator implements UserDetails {
 
 
 
-	// Méthode role de l'utilisateur
+	// Transforme les roles de l'utilisateur en grantedAuthorities
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        for (UserRole userRole : roles) {
+        	  GrantedAuthority authority = new SimpleGrantedAuthority(userRole.toString());
+              grantedAuthorities.add(authority);
+		}
+		return grantedAuthorities;
 	}
 
 

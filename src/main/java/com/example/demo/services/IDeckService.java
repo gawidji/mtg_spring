@@ -10,7 +10,7 @@ import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
-import com.example.demo.enums.Rarity;
+import com.example.demo.enums.EnumRarity;
 import com.example.demo.register.DeckRegister;
 
 public interface IDeckService {
@@ -24,9 +24,9 @@ public interface IDeckService {
 	Deck updateDeck(Long deckID, Deck deckUpdate);
 
 	List<Card> getCardsByFilterForDeck(Long deckId, String name, Long manaCostMin, Long manaCostMax, Float valueMin,
-										Float valueMax, List<CardType> types, List<Rarity> rarities, List<EnumEdition> editions);	
+										Float valueMax, List<CardType> types, List<EnumRarity> rarities, List<EnumEdition> editions);	
 	List<Card> getCommanderByFilterForDeck(Long deckId, String name, Long manaCostMin, Long manaCostMax, Float valueMin,
-			Float valueMax, List<Rarity> rarities, List<EnumEdition> editions);
+			Float valueMax, List<EnumRarity> rarities, List<EnumEdition> editions);
 	
 	Deck addCardOnDeck(Long cardId, Long deckId);
 	Deck addCommanderOnDeck(Long cardId, Long deckId);

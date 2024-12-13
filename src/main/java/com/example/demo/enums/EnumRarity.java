@@ -1,6 +1,6 @@
 package com.example.demo.enums;
 
-public enum Rarity {
+public enum EnumRarity {
 	
 	MYTHIQUE ("Mythique"),
 	RARE ("Rare"),
@@ -9,7 +9,7 @@ public enum Rarity {
 	
 	private String value;
 
-	private Rarity(String value) {
+	private EnumRarity(String value) {
 		this.value = value;
 	}
 

@@ -1,5 +1,7 @@
 package com.example.demo.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +14,10 @@ public class ColorService {
 	@Autowired
 	private ColorRepository colorsRepository;
 	
-	public Color addColor(Color color) {
-		return colorsRepository.save(color);
+	public void addColor(List<Color> colors) {
+		for (Color color : colors) {
+			colorsRepository.save(color);
+		}
 	}
 	
 	public String deleteColor(Long colorId) {

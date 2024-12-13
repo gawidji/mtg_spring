@@ -43,24 +43,24 @@ public class AuthenticationService implements IAuthenticationService {
 	@Override
 	public DeckCreator inscription(DeckCreator deckBuilder) {
 	
-		DeckCreator db = DeckCreator.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(passwordEncoder.encode(deckBuilder.getPassword()))
-				.avatar(deckBuilder.getAvatar()).dateSign((LocalDate.now()))
-				.activity(UserActivity.VIEWVER).role(UserRole.USER)
-				.build();
+		deckBuilder.setPassword(passwordEncoder.encode(deckBuilder.getPassword()));
+		deckBuilder.setDateSign(LocalDate.now());
+		deckBuilder.setActivity(UserActivity.VIEWVER);
+		deckBuilder.getRoles().add(UserRole.USER);
 		
-		return deckBuilderRepository.save(db);
+		return deckBuilderRepository.save(deckBuilder);
 	}
 	// Méthode d'inscription d'un utilisateur
 	
 	@Override
 	public DeckCreator addAdmin(DeckCreator deckBuilder) {
-	
+		deckBuilder.setPassword(passwordEncoder.encode(deckBuilder.getPassword()));
+		deckBuilder.setDateSign(LocalDate.now());
+		deckBuilder.setActivity(UserActivity.VIEWVER);
+		deckBuilder.getRoles().add(UserRole.USER);
+		deckBuilder.getRoles().add(UserRole.ADMIN);
 		
-		DeckCreator db = DeckCreator.builder().pseudo(deckBuilder.getPseudo()).email(deckBuilder.getEmail()).password(passwordEncoder
-				.encode(deckBuilder.getPassword())).avatar(deckBuilder.getAvatar()).role(UserRole.ADMIN)
-				.build();
-		
-		return deckBuilderRepository.save(db);
+		return deckBuilderRepository.save(deckBuilder);
 	}
 	
 	@Override

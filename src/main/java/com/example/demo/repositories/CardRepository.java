@@ -11,7 +11,7 @@ import com.example.demo.entities.Color;
 import com.example.demo.entities.Format;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumEdition;
-import com.example.demo.enums.Rarity;
+import com.example.demo.enums.EnumRarity;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
 	
@@ -50,7 +50,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 				@Param("valueMin") Float valueMin,
 				@Param("valueMax") Float valueMax,
 		        @Param("types") List<CardType> types,
-		        @Param("rarities") List<Rarity> rarities,
+		        @Param("rarities") List<EnumRarity> rarities,
 		        @Param("editions") List<EnumEdition> editions,
 		        @Param("colors") List<Color> colors,
 		        @Param("formats") List<Format> formats

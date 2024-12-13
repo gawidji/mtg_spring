@@ -9,7 +9,7 @@ import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
-import com.example.demo.enums.Rarity;
+import com.example.demo.enums.EnumRarity;
 
 public interface ICardService {
 	
@@ -19,7 +19,7 @@ public interface ICardService {
 	List<Card> getAllCards();
 	// List<EnumFormat> getCardFormats(Long cardID);
 	List<Card> getCardsByFilter(String name, Long manaCostMin, Long manaCostMax, Float valueMin, Float valueMax,
-			List<EnumFormat> formats, List<EnumColor> colors, List<CardType> types, List<Rarity> rarities,
+			List<EnumFormat> formats, List<EnumColor> colors, List<CardType> types, List<EnumRarity> rarities,
 			List<EnumEdition> editions);
 	
 	Card addCard(Card card, List<Color> cardColors, List<Format> cardFormats);
