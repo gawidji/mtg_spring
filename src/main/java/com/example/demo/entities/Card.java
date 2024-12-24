@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 
@@ -34,6 +35,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "card")
+@ToString(exclude = {"formats", "colors", "decks", "decksCommander"})
+
 
 public class Card {
 	
@@ -44,7 +47,7 @@ public class Card {
 	@Column(name = "nom", nullable = false, unique = true)
 	private String name;
 	
-	@Column(name = "texte", nullable = false, unique = false)
+	@Column(name = "texte", nullable = false, unique = false,  length = 5000 )
 	private String text;
 	
 	@Column(name = "image", unique = false)
@@ -56,7 +59,7 @@ public class Card {
 	@Column(name = "valeur", unique = false)
 	private Float value;
 	
-	@ManyToMany(cascade = { CascadeType.ALL })
+	@ManyToMany
     @JoinTable(
         name = "Cards_Formats", 
         joinColumns = { @JoinColumn(name = "card_id") }, 
@@ -65,12 +68,12 @@ public class Card {
 	private List<Format> formats = new ArrayList<>();
 	
 	
-	@ManyToMany(cascade = { CascadeType.ALL })
+	@ManyToMany
     @JoinTable(
         name = "Cards_Colors", 
         joinColumns = { @JoinColumn(name = "card_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "color_id") }
-    )	
+     )	
 	private List<Color> colors = new ArrayList<>();
 	
 	

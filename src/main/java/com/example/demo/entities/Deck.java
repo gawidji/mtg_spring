@@ -2,12 +2,9 @@ package com.example.demo.entities;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.example.demo.enums.EnumFormat;
-
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,7 +37,8 @@ public class Deck {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
+
 	@Column(name = "nom", length = 25, nullable = false, unique = false)
 	private String name;
 	
@@ -54,12 +52,12 @@ public class Deck {
 	@Enumerated(EnumType.STRING)
 	private EnumFormat format;
 	
-	@ManyToMany(cascade = { CascadeType.ALL })
+	@ManyToMany
     @JoinTable(
         name = "Decks_Colors", 
         joinColumns = { @JoinColumn(name = "deck_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "color_id") }
-    )	
+    )
 	private List<Color> colors = new ArrayList<>();
 	
 	@Column(name="cout_mana")

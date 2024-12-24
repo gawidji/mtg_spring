@@ -4,7 +4,7 @@ public enum EnumRarity {
 	
 	MYTHIQUE ("Mythique"),
 	RARE ("Rare"),
-	PEU_COMMUNE ("Peu commune"),
+	UNCOMMUNE ("Peu commune"),
 	COMMUNE ("Commune");
 	
 	private String value;

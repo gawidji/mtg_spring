@@ -18,7 +18,7 @@ import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
 import com.example.demo.enums.UserActivity;
-import com.example.demo.register.DeckRegister;
+import com.example.demo.register.FormDeck;
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Color;
 import com.example.demo.entities.Deck;
@@ -49,7 +49,7 @@ public class DeckService implements IDeckService {
 	
 	
 	@Override
-	public Deck addDeckWithForm (DeckCreator dbuilder, DeckRegister deckRegister ) {
+	public Deck addDeckWithForm (DeckCreator dbuilder, FormDeck deckRegister ) {
 		
 		
 		if(dbuilder != null) {

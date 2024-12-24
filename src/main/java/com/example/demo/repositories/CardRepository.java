@@ -57,6 +57,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 				);
 	
 	
+	List<Card> findAll();
 	
 	List<Card> findByColorsIn(List<Color> colors);
 	List<Card> findByFormatsIn(List<Format> formats);	

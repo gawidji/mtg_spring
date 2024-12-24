@@ -23,7 +23,7 @@ import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumRarity;
-import com.example.demo.register.DeckRegister;
+import com.example.demo.register.FormDeck;
 import com.example.demo.repositories.DeckBuilderRepository;
 import com.example.demo.services.IAccountService;
 import com.example.demo.services.IDeckService;
@@ -57,7 +57,7 @@ public class UserController {
 	
 	
 	@PostMapping("addDeck")
-	public ResponseEntity addDeck( Authentication authentication, @RequestBody DeckRegister deckRegister) {
+	public ResponseEntity addDeck( Authentication authentication, @RequestBody FormDeck deckRegister) {
 		
 		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
 		

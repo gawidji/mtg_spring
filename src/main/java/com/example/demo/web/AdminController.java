@@ -20,7 +20,7 @@ import com.example.demo.entities.Color;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.entities.Format;
 import com.example.demo.enums.UserActivity;
-import com.example.demo.register.CardRegister;
+import com.example.demo.register.FormCard;
 import com.example.demo.services.ColorService;
 import com.example.demo.services.FormatService;
 import com.example.demo.services.IAuthenticationService;
@@ -69,7 +69,7 @@ public class AdminController {
 	
 	@PostMapping("addCard")
     @PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity addCard(Authentication authentication, @RequestBody CardRegister cardRegister ) {
+	public ResponseEntity addCard(Authentication authentication, @RequestBody FormCard cardRegister ) {
 		
 		 iCardService.addCard(cardRegister.getCard(), cardRegister.getColors(), cardRegister.getFormats());
 		 return ResponseEntity.ok("Carte ajoutée : " + cardRegister.getCard() );

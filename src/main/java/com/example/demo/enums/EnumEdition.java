@@ -2,7 +2,7 @@ package com.example.demo.enums;
 
 public enum EnumEdition {
 	
-	
+	MYSTICAL ("Mystical"),
 	LES_FRICHES_D_ELDRAINE ("Les Friches d'Eldaines"),
 	LES_CAVERNES_OUBLIÉES_D_IXALAN ("Les Cavernes Oubliées d'Ixalan"),
 	RAVNICA_REMASTERED ("Ravinca Remastered"),

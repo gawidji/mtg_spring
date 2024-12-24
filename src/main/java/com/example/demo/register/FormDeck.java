@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeckRegister {
+public class FormDeck {
 	
 	// private Deck deck;
 	

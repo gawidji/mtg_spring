@@ -11,13 +11,13 @@ import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
-import com.example.demo.register.DeckRegister;
+import com.example.demo.register.FormDeck;
 
 public interface IDeckService {
 	
 	// Methodes f_user
 	
-	Deck addDeckWithForm (DeckCreator dbuilder, DeckRegister deckRegister );
+	Deck addDeckWithForm (DeckCreator dbuilder, FormDeck deckRegister );
 	
 	
 	String deleteDeck(Long deckID);

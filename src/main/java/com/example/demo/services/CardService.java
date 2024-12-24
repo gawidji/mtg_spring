@@ -16,6 +16,7 @@ import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
+import com.example.demo.register.GetCard;
 import com.example.demo.repositories.CardRepository;
 import com.example.demo.repositories.ColorRepository;
 import com.example.demo.repositories.DeckRepository;
@@ -114,16 +115,42 @@ public class CardService implements ICardService {
 	public List<Card> getAllCards() {
 		return cardRepository.findAll();
 	}
-	/*
+	
 	@Override
-	public List<EnumFormat> getCardFormats(Long cardID) {
-		Optional<Card> card = cardRepository.findById(cardID);
-		if(card.isPresent()) {
-		return card.get().getFormats();
-		}
-		throw new RuntimeException("Carte non trouvée");
+	public GetCard getCardById(Long cardId) {
+		 
+		Card cardFind = cardRepository.findById(cardId).get();
+		 if (cardFind != null) {
+			 GetCard cardReturn = new GetCard();
+				
+			 cardReturn.setId(cardFind.getId());
+			 cardReturn.setName(cardFind.getName());
+			 cardReturn.setText(cardFind.getText());
+			 cardReturn.setImage(cardFind.getImage());
+			 cardReturn.setManaCost(cardFind.getManaCost());
+			 cardReturn.setValue(cardFind.getValue());
+			 cardReturn.setRarity(cardFind.getRarity());
+			 cardReturn.setType(cardFind.getType());
+			 
+			 List <EnumColor> cardTestColors = new ArrayList<>();
+			 for (Color color : cardFind.getColors()) {
+				 cardTestColors.add(color.getName());
+			}
+			 cardReturn.setColors(cardTestColors);
+			 
+			 List <EnumFormat> cardTestFormats = new ArrayList<>();
+			 for (Format format : cardFind.getFormats()) {
+				 cardTestFormats.add(format.getName());
+			}
+			 cardReturn.setFormats(cardTestFormats);
+			 
+			 return cardReturn;
+		 }
+		 	return null;
+
+
 	}
-	*/
+	
 	
 	@Override
 	public List<Card> getCardsByFilter (String name,  Long manaCostMin, Long manaCostMax, 

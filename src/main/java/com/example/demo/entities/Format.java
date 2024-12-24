@@ -5,11 +5,13 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.example.demo.enums.EnumFormat;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,12 +28,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "format")
 @Builder
-public class Format implements Serializable {
+public class Format  {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +40,7 @@ public class Format implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EnumFormat name;
 	
-	@ManyToMany(mappedBy = "formats")
+	@ManyToMany(mappedBy = "formats", fetch = FetchType.LAZY)
 	private List<Card> cards;
 
 }

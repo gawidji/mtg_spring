@@ -5,8 +5,6 @@ import java.util.List;
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Color;
 import com.example.demo.entities.Format;
-import com.example.demo.enums.EnumFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardRegister {
+public class FormCard {
 	
 	private Card card;
 	
