@@ -3,8 +3,6 @@ package com.example.demo.entities;
 import java.io.Serializable;
 import java.util.List;
 import com.example.demo.enums.EnumColor;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,8 +25,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "color")
 @Builder
 
-public class Color   {
+public class Color implements Serializable {
 	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

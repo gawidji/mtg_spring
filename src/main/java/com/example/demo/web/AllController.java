@@ -29,7 +29,9 @@ import com.example.demo.repositories.CardRepository;
 import com.example.demo.repositories.DeckBuilderRepository;
 import com.example.demo.repositories.DeckRepository;
 import com.example.demo.services.CardService;
+import com.example.demo.services.ColorService;
 import com.example.demo.services.DeckService;
+import com.example.demo.services.EnumService;
 import com.example.demo.services.IAuthenticationService;
 
 @RestController
@@ -48,6 +50,12 @@ public class AllController {
 	
 	@Autowired
 	private CardService cardService;
+	
+	@Autowired
+	private ColorService colorService;
+	
+	@Autowired
+	private EnumService enumService;
 	
 	@Autowired
 	CardRepository cardRepository;
@@ -83,8 +91,14 @@ public class AllController {
 		return deckRepository.findById(deckId);
 	}
 	
+		
+	@GetMapping("getCard")
+	public GetCard getCard (@RequestParam Long cardId) {
+		return cardService.getCardById(cardId);
+	}
+	
 	@GetMapping("getCards")
-	public List<Card> getCardsByFilter (@RequestParam(required = false) String name, 
+	public List<GetCard> getCardsByFilter (@RequestParam(required = false) String name, 
 			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
 			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
 			@RequestParam(required = false) List<EnumFormat> formats,
@@ -93,13 +107,7 @@ public class AllController {
 		return cardService.getCardsByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors, types, rarities, editions);
 	}
 	
-	@GetMapping("getCard")
-	public GetCard getCard (@RequestParam Long cardId) {
-		return cardService.getCardById(cardId);
-	}
-	
-	
-	
+	/*
 	
 	@GetMapping("getCardsByColors")
 	public List<Card> getCardsByColors (@RequestParam List<EnumColor> colors) {
@@ -134,6 +142,7 @@ public class AllController {
 		
 		return decksReturn;
 	}
+	*/
 	
 	@GetMapping("testCards")
 	public List<GetCard> getCards () {
@@ -145,6 +154,8 @@ public class AllController {
 			testCard.setId(card.getId());
 			testCard.setName(card.getName());
 			testCard.setImage(card.getImage());
+			testCard.setText(card.getText());
+			testCard.setType(card.getType());
 			
 			for (Color color : card.getColors()) {
 				testCard.getColors().add(color.getName());
@@ -162,5 +173,21 @@ public class AllController {
 	public List<DeckCreator> getUsers () {
 		return userRepository.findAll();
 	}
+	
+	@GetMapping("getColors")
+	public List<EnumColor> getColorsNames() {
+		return enumService.getColorsNames();
+	}
+	
+	@GetMapping("getFormats")
+	public List<EnumFormat> getFormatsNames() {
+		return enumService.getFormatsNames();
+	}
+	
+	@GetMapping("getRarities")
+	public List<EnumRarity> getRarities() {
+		return enumService.getRarities();
+	}
+
 
 }
