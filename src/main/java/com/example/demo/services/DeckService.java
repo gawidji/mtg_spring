@@ -125,14 +125,14 @@ public class DeckService implements IDeckService {
 			
 			Deck newDeck = deck.get();
 			
-			List<Card> cardCompatible = newDeck.getCartes().stream()
+			List<Card> cardCompatible = newDeck.getCards().stream()
 					.filter(card -> card.getFormats().contains(deckUpdate.getFormat()) 
 					&& card.getColors().stream().anyMatch(color -> deckUpdate.getColors().contains(color)))
 					.collect(Collectors.toList());		
 			// Filtre la list de cartes pour ne collecter que les cartes dont la list de format contient le format de deckUpdate
 			// Et dont la list de couleurs matche une fois avec la list de couleur de deckUpdate (anyMatch
 			
-			newDeck.setCartes(cardCompatible);
+			newDeck.setCards(cardCompatible);
 			if(deckUpdate.getFormat() != null) {
 				newDeck.setFormat(deckUpdate.getFormat()); }
 			if(deckUpdate.getColors() != null) {
@@ -174,6 +174,7 @@ public class DeckService implements IDeckService {
 	// Filtre les cartes comme getCartesFilter sauf que le format et la couleur sont deja définit 
 	// pour correspondre au format et aux couleurs du deck
 	
+	/*
 	@Override
 	public List<Card> getCommanderByFilterForDeck (Long deckId, String name, Long manaCostMin, Long manaCostMax,
 			Float valueMin, Float valueMax, List<EnumRarity> rarities, List<EnumEdition> editions) {
@@ -287,6 +288,7 @@ public class DeckService implements IDeckService {
 	
 			
 	}
+	*/
 	// Les cartes commanders ne peuvent etre que des créatures légendaires
 	
 	@Override
@@ -300,7 +302,7 @@ public class DeckService implements IDeckService {
 			
 			for (Deck deckTarget : cardFind.getDecks() )
 			{
-				deckTarget.getCartes().remove(cardFind);
+				deckTarget.getCards().remove(cardFind);
 				deckRepository.save(deckTarget);
 			}
 			return cardFind.getName() + " a été retiré du deck";
@@ -331,8 +333,8 @@ public class DeckService implements IDeckService {
 		
 		if(deck.isPresent()) {
 
-			if(deck.get().getFormat().equals(EnumFormat.COMMANDER.toString()) && deck.get().getCartes().size() == 100 ||
-				!deck.get().getFormat().equals(EnumFormat.COMMANDER.toString()) && deck.get().getCartes().size() > 59
+			if(deck.get().getFormat().equals(EnumFormat.COMMANDER.toString()) && deck.get().getCards().size() == 100 ||
+				!deck.get().getFormat().equals(EnumFormat.COMMANDER.toString()) && deck.get().getCards().size() > 59
 					) {
 				Deck deckPresent = deck.get();
 				deckPresent.setIsPublic(true);
@@ -395,7 +397,7 @@ public class DeckService implements IDeckService {
 		Float deckValue = 0f;
 		
 		if(deck.isPresent()) {
-			 List<Card> cardsDeck = deck.get().getCartes();
+			 List<Card> cardsDeck = deck.get().getCards();
 			 for (Card cards : cardsDeck) {
 				 Float cardValue = cards.getValue();
 				 deckValue += cardValue;
@@ -418,7 +420,7 @@ public class DeckService implements IDeckService {
 		int i = 0;
 		
 		if(deck.isPresent()) {
-			 List<Card> cardsDeck = deck.get().getCartes();
+			 List<Card> cardsDeck = deck.get().getCards();
 			 for (Card cards : cardsDeck) {
 				 Long cardValue = cards.getManaCost();
 				 if(!cards.getType().equals(CardType.TERRAIN) ) {
@@ -450,6 +452,9 @@ public class DeckService implements IDeckService {
 		}
 		return deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, true, formats, colorsEntities);
 	}
+
+
+	
 	
 
 }

@@ -20,8 +20,8 @@ public interface ICardService {
 	
 	List<Card> getAllCards();
 	List<GetCard> getCardsByFilter(String name, Long manaCostMin, Long manaCostMax, Float valueMin, Float valueMax,
-			List<EnumFormat> formats, List<EnumColor> colors, List<CardType> types, List<EnumRarity> rarities,
-			List<EnumEdition> editions);
+			List<EnumFormat> formats, List<EnumColor> colors, List<CardType> types, String legendary,
+			List<EnumRarity> rarities, List<EnumEdition> editions);
 	GetCard getCardById(Long cardId);
 
 	

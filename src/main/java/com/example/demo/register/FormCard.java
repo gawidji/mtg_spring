@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class FormCard {
 	
 	private Card card;
-	
+		
 	private List<Color> colors;
 	
 	private List<Format> formats;

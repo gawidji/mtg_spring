@@ -89,6 +89,7 @@ public class UserController {
 		return iDeckService.getCardsByFilterForDeck(deckId, name, manaCostMin, manaCostMax, valueMin, valueMax, types, rarities, editions);
 	}
 	
+	/*
 	@GetMapping("getCommander")
 	public List<Card> getCommanderByFilterForDeck(@RequestParam Long deckId, @RequestParam(required = false) String name,
 			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
@@ -108,6 +109,7 @@ public class UserController {
 	public Deck addCommanderOnDeck(Long cardId, Long deckId) {
 		return iDeckService.addCommanderOnDeck(cardId, deckId);
 	}
+	*/
 	
 	@DeleteMapping("deleteCardOnDeck")
 	public String deleteCardOnDeck(@RequestParam Long cardId, @RequestParam Long deckId) {

@@ -52,7 +52,7 @@ public class CardService implements ICardService {
 			
 			card.getFormats().add(formatRepository.findByName(format.getName()));
 		}
-		
+				
 		return cardRepository.save(card);
 	}
 	
@@ -101,7 +101,7 @@ public class CardService implements ICardService {
 					
 			for (Deck deckTarget : cardFind.getDecks() )
 			{
-				deckTarget.getCartes().remove(cardFind);
+				deckTarget.getCards().remove(cardFind);
 				deckRepository.save(deckTarget);
 			}
 					
@@ -155,7 +155,7 @@ public class CardService implements ICardService {
 	@Override
 	public List<GetCard> getCardsByFilter (String name,  Long manaCostMin, Long manaCostMax, 
 			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors, 
-			List<CardType> types, List<EnumRarity> rarities, List<EnumEdition> editions) {
+			List<CardType> types, String legendary, List<EnumRarity> rarities, List<EnumEdition> editions) {
 		
 		List<Color> colorsEntities = new ArrayList<>();	
 		if(colors != null) {
@@ -179,7 +179,7 @@ public class CardService implements ICardService {
 		}
 		
 		List<Card> cards = cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, types,
-				rarities, editions, colorsEntities, formatsEntities);
+				legendary, rarities, editions, colorsEntities, formatsEntities);
 		
 		List<GetCard> cardsReturn = new ArrayList<>();
 		

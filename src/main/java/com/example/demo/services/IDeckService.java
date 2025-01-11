@@ -22,14 +22,16 @@ public interface IDeckService {
 	
 	String deleteDeck(Long deckID);
 	Deck updateDeck(Long deckID, Deck deckUpdate);
-
+	
 	List<Card> getCardsByFilterForDeck(Long deckId, String name, Long manaCostMin, Long manaCostMax, Float valueMin,
-										Float valueMax, List<CardType> types, List<EnumRarity> rarities, List<EnumEdition> editions);	
+										Float valueMax, List<CardType> types, List<EnumRarity> rarities, List<EnumEdition> editions);
+	/*
 	List<Card> getCommanderByFilterForDeck(Long deckId, String name, Long manaCostMin, Long manaCostMax, Float valueMin,
 			Float valueMax, List<EnumRarity> rarities, List<EnumEdition> editions);
 	
 	Deck addCardOnDeck(Long cardId, Long deckId);
 	Deck addCommanderOnDeck(Long cardId, Long deckId);
+	 */
 	String deleteCardOnDeck(Long cardId, Long deckId);
 	String deleteCommanderOnDeck(Long deckID);
 	

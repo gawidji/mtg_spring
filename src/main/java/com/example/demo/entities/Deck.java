@@ -74,13 +74,13 @@ public class Deck {
     private DeckCreator deckBuilder;
 	
 
-	@ManyToMany(cascade = { CascadeType.ALL })
+	@ManyToMany
     @JoinTable(
         name = "Deck_Cards", 
         joinColumns = { @JoinColumn(name = "deck_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "card_id") }
     )	
-	private List<Card> cartes;
+	private List<Card> cards;
 	
 
 	@ManyToOne

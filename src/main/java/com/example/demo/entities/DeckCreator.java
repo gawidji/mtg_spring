@@ -21,7 +21,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -68,7 +71,13 @@ public class DeckCreator implements UserDetails {
 	@Enumerated(EnumType.STRING)
     private List<UserRole> roles = new ArrayList<>();
 	
-
+	@ManyToMany
+    @JoinTable(
+        name = "DeckBuilders_Cards", 
+        joinColumns = { @JoinColumn(name = "deckBuilder_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "card_id") }
+    )	
+	private List<Card> cards;
 	
 	@OneToMany(mappedBy = "deckBuilder", cascade = CascadeType.ALL)
 	private Set<Deck> decks;

@@ -15,17 +15,6 @@ import com.example.demo.enums.EnumRarity;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
 	
-	
-	/*
-	Optional<Card> findByName(String nom);
-	List<Card> findByNameContaining(String nom);
-	List<Card> findByFormats(Format formats);
-	List<Card> findByManaCost (int manaCost);
-	List<Card> findByColors (Color color);
-	List<Card> findByType (CardType type);
-	List<Card> findByRarity(Rarity rarete);
-	List<Card> findByEdition (Edition edition);
-	*/
 	// Potentiellement ajouter un filtre pour la value
 	
 	
@@ -33,11 +22,12 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 				"LEFT JOIN c.colors Color " +
 		       "LEFT JOIN c.formats Format " +
 		       "WHERE (:name IS NULL OR c.name LIKE %:name%) " +
-		       "AND (:manaCostMin IS NULL OR c.manaCost > :manaCostMin) " +
-		       "AND (:manaCostMax IS NULL OR c.manaCost < :manaCostMax) " +
-		       "AND (:valueMin IS NULL OR c.value > :valueMin) " +
-		       "AND (:valueMax IS NULL OR c.value < :valueMax) " +
+		       "AND (:manaCostMin IS NULL OR c.manaCost >= :manaCostMin) " +
+		       "AND (:manaCostMax IS NULL OR c.manaCost <= :manaCostMax) " +
+		       "AND (:valueMin IS NULL OR c.value >= :valueMin) " +
+		       "AND (:valueMax IS NULL OR c.value <= :valueMax) " +
 		       "AND (:types IS NULL OR c.type IN :types) " +
+		       "AND (:legendary IS NULL or c.legendary IN :legendary)" +
 		       "AND (:rarities IS NULL OR c.rarity IN :rarities) " +
 		       "AND (:editions IS NULL OR c.edition IN :editions) " +
 		       "AND (:colors IS NULL OR Color IN :colors) " +
@@ -50,6 +40,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 				@Param("valueMin") Float valueMin,
 				@Param("valueMax") Float valueMax,
 		        @Param("types") List<CardType> types,
+		        @Param("legendary") String legendary,
 		        @Param("rarities") List<EnumRarity> rarities,
 		        @Param("editions") List<EnumEdition> editions,
 		        @Param("colors") List<Color> colors,

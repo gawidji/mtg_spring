@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.Color;
 import com.example.demo.entities.Format;
+import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
+import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
 import com.example.demo.repositories.ColorRepository;
@@ -50,6 +52,24 @@ public class EnumService {
 			rarities.add(enumRarity);
 		}
 		return rarities;
+	}
+	
+	public List<EnumEdition> getEditions() {
+		EnumEdition[] editionsTab = EnumEdition.values();
+		List<EnumEdition> editions = new ArrayList<>();
+		for (EnumEdition enumEdition : editionsTab) {
+			editions.add(enumEdition);
+		}
+		return editions;
+	}
+	
+	public List<CardType> getTypes() {
+		CardType[] typesTab = CardType.values();
+		List<CardType> types = new ArrayList<>();
+		for (CardType enumType : typesTab) {
+			types.add(enumType);
+		}
+		return types;
 	}
 
 	

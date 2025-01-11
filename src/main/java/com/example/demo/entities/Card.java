@@ -80,6 +80,9 @@ public class Card {
 	@Enumerated(EnumType.STRING)
 	private CardType type;
 	
+	@Column(name = "legendaire", nullable = true)
+	private String legendary;
+	
 	@Column(name = "rareté", nullable = false, unique = false)
 	@Enumerated(EnumType.STRING)
 	private EnumRarity rarity;
@@ -87,8 +90,10 @@ public class Card {
 	@Enumerated(EnumType.STRING)
 	private EnumEdition edition;
 	
+	@ManyToMany(mappedBy = "cards")
+	private Set<DeckCreator> deckBuilders;
 	
-	@ManyToMany(mappedBy = "cartes")
+	@ManyToMany(mappedBy = "cards")
 	private List<Deck> decks;
 	
 	@OneToMany(mappedBy = "commander", cascade = CascadeType.ALL)

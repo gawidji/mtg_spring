@@ -4,9 +4,9 @@ public enum CardType {
 	
 	TERRAIN ("Terrain"),
 	CREATURE ("Créature"),
-	CREATURE_LEGENDAIRE ("Créature légendaire"),
 	PLANESWALKER ("Planeswalker"),
 	ENCHANTEMENT ("Enchantement"),
+	BATAILLE ("Bataille"),
 	RITUEL ("Rituel"),
 	EPHEMERE ("Ephemère"),
 	ARTEFACT ("Artefact");
