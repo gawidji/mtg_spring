@@ -25,7 +25,7 @@ import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumRarity;
 import com.example.demo.register.FormDeck;
 import com.example.demo.repositories.DeckBuilderRepository;
-import com.example.demo.services.IAccountService;
+import com.example.demo.services.IDeckBuilderService;
 import com.example.demo.services.IDeckService;
 
 @RestController
@@ -36,7 +36,7 @@ public class UserController {
 	// créer, modifier, rechercher des decks accessibles par les users auth
 	
 	@Autowired
-	private IAccountService iDeckBuilderService;
+	private IDeckBuilderService iDeckBuilderService;
 	@Autowired
 	private IDeckService iDeckService;
 	@Autowired
@@ -84,9 +84,10 @@ public class UserController {
 	public List<Card> getCardsByFilterForDeck (@RequestParam Long deckId, @RequestParam(required = false) String name,
 			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
 			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
-			@RequestParam(required = false) List <CardType> types, 
+			@RequestParam(required = false) List <CardType> types, @RequestParam(required = false) String legendary,
 			@RequestParam(required = false) List <EnumRarity> rarities, @RequestParam(required = false) List<EnumEdition> editions) {
-		return iDeckService.getCardsByFilterForDeck(deckId, name, manaCostMin, manaCostMax, valueMin, valueMax, types, rarities, editions);
+		return iDeckService.getCardsByFilterForDeck(deckId, name, manaCostMin, manaCostMax, valueMin, valueMax, 
+													types, legendary, rarities, editions);
 	}
 	
 	/*
@@ -100,16 +101,17 @@ public class UserController {
 
 	
 	
-	@PostMapping("addCardOnDeck")
-	public Deck addCardOnDeck(@RequestParam Long cardId, @RequestParam Long deckId) {
-		return iDeckService.addCardOnDeck(cardId, deckId);
-	}
 	
 	@PostMapping("addCommanderOnDeck")
 	public Deck addCommanderOnDeck(Long cardId, Long deckId) {
 		return iDeckService.addCommanderOnDeck(cardId, deckId);
 	}
 	*/
+	
+	@PostMapping("addCardOnDeck")
+	public Deck addCardOnDeck(Authentication authentication, @RequestParam Long cardId, @RequestParam Long deckId) {
+		return iDeckService.addCardOnDeck(cardId, deckId);
+	}
 	
 	@DeleteMapping("deleteCardOnDeck")
 	public String deleteCardOnDeck(@RequestParam Long cardId, @RequestParam Long deckId) {

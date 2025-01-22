@@ -19,6 +19,8 @@ import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.register.FormDeck;
+import com.example.demo.register.GetCard;
+import com.example.demo.register.GetDeck;
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Color;
 import com.example.demo.entities.Deck;
@@ -150,7 +152,7 @@ public class DeckService implements IDeckService {
 	
 	@Override
 	public List<Card> getCardsByFilterForDeck (Long deckId, String name, Long manaCostMin, Long manaCostMax,
-			Float valueMin, Float valueMax, List<CardType> types,
+			Float valueMin, Float valueMax, List<CardType> types, String legendary,
 			List <EnumRarity> rarities, List<EnumEdition> editions) {
 		
 		Optional<Deck> deck = deckRepository.findById(deckId);
@@ -166,7 +168,7 @@ public class DeckService implements IDeckService {
 		if(deck.isPresent()) {
 			
 			return cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, types, 
-					rarities, editions, colorsDeck, formatDeck);
+					legendary, rarities, editions, colorsDeck, formatDeck);
 			
 		}
 		throw new RuntimeException("Deck non trouvé");
@@ -174,7 +176,7 @@ public class DeckService implements IDeckService {
 	// Filtre les cartes comme getCartesFilter sauf que le format et la couleur sont deja définit 
 	// pour correspondre au format et aux couleurs du deck
 	
-	/*
+/*	
 	@Override
 	public List<Card> getCommanderByFilterForDeck (Long deckId, String name, Long manaCostMin, Long manaCostMax,
 			Float valueMin, Float valueMax, List<EnumRarity> rarities, List<EnumEdition> editions) {
@@ -201,6 +203,7 @@ public class DeckService implements IDeckService {
 		throw new RuntimeException("Deck non trouvé");
 		
 	}
+	*/
 	
 	@Override
 	public Deck addCardOnDeck(Long cardId, Long deckId) {
@@ -221,25 +224,35 @@ public class DeckService implements IDeckService {
 				}
 			}
 			
-			if(cardToAdd.get().getFormats().contains(deckToTarget.get().getFormat()) && communColor == true	) {
-				
+			boolean communFormat = false;
+			
+			for (Format formatCard : cardToAdd.get().getFormats()) {
+				if(formatCard.getName().equals(deckToTarget.get().getFormat())) {
+					communFormat = true;
+					break;
+				}
+			}
+			
+				if(communFormat == true && communColor == true	) {
+				/*
 				if(deckToTarget.get().getFormat().equals(EnumFormat.COMMANDER.toString()) ) {
-						if ( deckToTarget.get().getCartes().size() > 99) {
+						if ( deckToTarget.get().getCards().size() > 99) {
 									
 							throw new RuntimeException("Nombre de cartes maximum atteint");
 							}
-						Card commanderPresent = deckToTarget.get().getCommander();
-						for (Card cardPresent : deckToTarget.get().getCartes()) {
-			                if (cardPresent.getName().equals(cardToAdd.get().getName()) || commanderPresent.getName().equals(cardToAdd.get().getName()) ) {
+						
+			Card commanderPresent = deckToTarget.get().getCommander();
+				for (Card cardPresent : deckToTarget.get().getCards()) {
+			           if (cardPresent.getName().equals(cardToAdd.get().getName()) || commanderPresent.getName().equals(cardToAdd.get().getName()) ) {
 			                	
-			                    throw new RuntimeException("Carte déjà présente");
+		                    throw new RuntimeException("Carte déjà présente");
 			                }
 			            }
 						
 				}
 				
 				int count = 0;
-	            for (Card cardPresent : deckToTarget.get().getCartes()) {
+	            for (Card cardPresent : deckToTarget.get().getCards()) {
 	                if (cardPresent.getName().equals(cardToAdd.get().getName())) {
 	                    count++;
 	                }
@@ -248,17 +261,15 @@ public class DeckService implements IDeckService {
 	            if (count >= 4) {
 	                throw new RuntimeException("Carte déjà présente quatre fois");
 	            }
-				
-					{
-						deckToTarget.get().getCartes()
-						.add(cardToAdd.get());
-						
-						deckToTarget.get().setManaCost(getDeckManaCost(deckToTarget.get().getId()));
-						deckToTarget.get().setValue(getDeckValue(deckToTarget.get().getId()));
-
-						
-						return deckRepository.save(deckToTarget.get());
-				}
+				*/
+					
+					deckToTarget.get().getCards().add(cardToAdd.get());					
+					deckToTarget.get().setManaCost(getDeckManaCost(deckToTarget.get().getId()));
+					deckToTarget.get().setValue(getDeckValue(deckToTarget.get().getId()));
+	
+							
+					return deckRepository.save(deckToTarget.get());
+			
 			}
 			throw new RuntimeException("Couleur ou format de la carte incompatible avec ce deck");
 		}
@@ -276,7 +287,7 @@ public class DeckService implements IDeckService {
 			Optional<Deck> deckToTarget = deckRepository.findById(deckId);
 			
 			if(cardToAdd.isPresent() && deckToTarget.isPresent()) {
-				if(cardToAdd.get().getType().equals(CardType.CREATURE_LEGENDAIRE.toString()) && deckToTarget.get().getFormat().equals(EnumFormat.COMMANDER.toString()) ) {
+				if(cardToAdd.get().getLegendary().equals("legendary") && deckToTarget.get().getFormat().equals(EnumFormat.COMMANDER.toString()) ) {
 					if(deckToTarget.get().getFormat().equals(null)) {
 							deckToTarget.get().setCommander(cardToAdd.get());
 					}
@@ -288,7 +299,7 @@ public class DeckService implements IDeckService {
 	
 			
 	}
-	*/
+	
 	// Les cartes commanders ne peuvent etre que des créatures légendaires
 	
 	@Override
@@ -438,7 +449,7 @@ public class DeckService implements IDeckService {
 	
 	
 	@Override
-	public List<Deck> getDecksByFilter (String name, Long manaCostMin, Long manaCostMax, 
+	public List<GetDeck> getDecksByFilter (String name, Long manaCostMin, Long manaCostMax, 
 			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors) {
 		
 		List<Color> colorsEntities = new ArrayList<>();	
@@ -450,11 +461,97 @@ public class DeckService implements IDeckService {
 		else {
 			colorsEntities = null;
 		}
-		return deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, true, formats, colorsEntities);
+		List<Deck> decks = deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, false, formats, colorsEntities);
+		List<GetDeck> decksReturn = new ArrayList<>();
+
+		for (Deck deck : decks) {
+			GetDeck testDeck = new GetDeck();
+			testDeck.setId(deck.getId());
+			testDeck.setName(deck.getName());
+			testDeck.setImage(deck.getImage());
+			testDeck.setDateCreation(deck.getDateCreation());
+			testDeck.setValue(deck.getValue());
+			testDeck.setManaCost(deck.getManaCost());
+			testDeck.setFormat(deck.getFormat());
+			testDeck.setLikeNumber(deck.getLikeNumber());
+			testDeck.setDeckBuilderName(deck.getDeckBuilder().getPseudo());
+			
+			for (Color color : deck.getColors()) {
+				testDeck.getColors().add(color.getName());
+			}	
+			decksReturn.add(testDeck);
+
+		}
+		
+		return decksReturn;
 	}
 
 
+	@Override
+	public GetDeck getDeckById(Long deckID) {
+		 
+		Deck deckFind = deckRepository.findById(deckID).get();
+		 GetDeck deckReturn = new GetDeck();
+
+		 if (deckFind != null) {			 
+			 deckReturn.setId(deckFind.getId());
+			 deckReturn.setName(deckFind.getName());
+			 deckReturn.setImage(deckFind.getImage());
+			 deckReturn.setDateCreation(deckFind.getDateCreation());
+			 deckReturn.setValue(deckFind.getValue());
+			 deckReturn.setManaCost(deckFind.getManaCost());
+			 deckReturn.setFormat(deckFind.getFormat());
+			 deckReturn.setLikeNumber(deckFind.getLikeNumber());
+			 deckReturn.setDeckBuilderName(deckFind.getDeckBuilder().getPseudo());
+				
+			for (Color color : deckFind.getColors()) {
+					deckReturn.getColors().add(color.getName());
+				};
+		 }
+				return deckReturn;
+			
+		 }
 	
+	@Override
+	public List<GetCard>  getCardsOnDeckById(Long deckID) {
+		
+		Deck deck = deckRepository.findById(deckID).get();
+		List<Card> CardsOnDeck = deck.getCards();
+		
+		List<GetCard> CardsReturn = new ArrayList<>();
+		
+		for (Card cardFind : CardsOnDeck) {
+			 GetCard cardReturn = new GetCard();
+				
+			 cardReturn.setId(cardFind.getId());
+			 cardReturn.setName(cardFind.getName());
+			 cardReturn.setText(cardFind.getText());
+			 cardReturn.setImage(cardFind.getImage());
+			 cardReturn.setManaCost(cardFind.getManaCost());
+			 cardReturn.setValue(cardFind.getValue());
+			 cardReturn.setRarity(cardFind.getRarity());
+			 cardReturn.setType(cardFind.getType());
+			 
+			 List <EnumColor> cardTestColors = new ArrayList<>();
+			 for (Color color : cardFind.getColors()) {
+				 cardTestColors.add(color.getName());
+			}
+			 cardReturn.setColors(cardTestColors);
+			 
+			 List <EnumFormat> cardTestFormats = new ArrayList<>();
+			 for (Format format : cardFind.getFormats()) {
+				 cardTestFormats.add(format.getName());
+			}
+			 cardReturn.setFormats(cardTestFormats);
+			 CardsReturn.add(cardReturn);
+		}
+			return CardsReturn;
+	}
+				 
+			
+			 
+			 
+			
 	
 
 }

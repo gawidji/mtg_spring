@@ -3,6 +3,7 @@ package com.example.demo.register;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.example.demo.entities.Card;
 import com.example.demo.entities.DeckCreator;
@@ -39,11 +40,15 @@ public class GetDeck {
 	    private DeckCreator deckBuilder;
 	    
 	    private String deckBuilderName;
-
-		private List<Card> cartes;
+	    
+		private List<Card> cards;
 		
 		private Card commander;
+			
+		private int likeNumber; 
 
+
+		
 
 
 

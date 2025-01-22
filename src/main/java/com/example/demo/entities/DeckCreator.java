@@ -77,7 +77,15 @@ public class DeckCreator implements UserDetails {
         joinColumns = { @JoinColumn(name = "deckBuilder_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "card_id") }
     )	
-	private List<Card> cards;
+	private List<Card> cardsLiked;
+	
+	@ManyToMany
+    @JoinTable(
+        name = "DeckBuilders_Decks", 
+        joinColumns = { @JoinColumn(name = "deckBuilder_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "deck_id") }
+    )	
+	private List<Deck> decksLiked;
 	
 	@OneToMany(mappedBy = "deckBuilder", cascade = CascadeType.ALL)
 	private Set<Deck> decks;

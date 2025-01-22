@@ -232,6 +232,7 @@ public class CardService implements ICardService {
 		
 		return cardRepository.findByFormatsIn(formatsFind);
 	}
+	
 		
 		
 	

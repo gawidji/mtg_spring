@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Color;
+import com.example.demo.entities.DeckCreator;
 import com.example.demo.entities.Format;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
@@ -25,9 +26,9 @@ public interface ICardService {
 	GetCard getCardById(Long cardId);
 
 	
-	
 	List<Card> findByColors(List<EnumColor> colors);
 	List<Card> findByFormats(List<EnumFormat> formats);
+
 
 
 

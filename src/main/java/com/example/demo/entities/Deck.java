@@ -2,10 +2,11 @@ package com.example.demo.entities;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.example.demo.enums.EnumFormat;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -72,6 +73,13 @@ public class Deck {
 	@ManyToOne
 	@JoinColumn(name = "deck_builder_id", nullable = false)
     private DeckCreator deckBuilder;
+	 
+	
+	@ManyToMany(mappedBy = "decksLiked")
+	private Set<DeckCreator> deckBuilders = new HashSet<>();
+	
+	@Column(name = "likeNumber")
+	private int likeNumber = deckBuilders.size(); 
 	
 
 	@ManyToMany
@@ -86,6 +94,8 @@ public class Deck {
 	@ManyToOne
 	@JoinColumn (name= "commander_id", nullable = true)
 	private Card commander;
+	
+	
 
 
 	

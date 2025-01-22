@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,11 +27,13 @@ import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
 import com.example.demo.register.GetCard;
+import com.example.demo.register.GetDeck;
 import com.example.demo.repositories.CardRepository;
 import com.example.demo.repositories.DeckBuilderRepository;
 import com.example.demo.repositories.DeckRepository;
 import com.example.demo.services.CardService;
 import com.example.demo.services.ColorService;
+import com.example.demo.services.DeckBuilderService;
 import com.example.demo.services.DeckService;
 import com.example.demo.services.EnumService;
 import com.example.demo.services.IAuthenticationService;
@@ -43,6 +48,9 @@ public class AllController {
 	
 	@Autowired
 	private IAuthenticationService iAuthenticationService;
+	
+	@Autowired
+	private DeckBuilderService deckBuilderService;
 	
 	@Autowired
 	private DeckService deckService;
@@ -65,6 +73,41 @@ public class AllController {
 	@Autowired
 	DeckBuilderRepository userRepository;
 	
+	
+	@PostMapping("likeCard")
+	public ResponseEntity likeCard (@RequestParam Long userId, @RequestParam Long cardId) {
+		
+		Optional<DeckCreator> user = userRepository.findById(userId);
+		if(user.isPresent()) {
+			deckBuilderService.likeCard(user.get(), cardId);
+			return ResponseEntity.ok("Carte ajoutée");
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+	}
+	
+	@DeleteMapping("dislikeCard")
+	public ResponseEntity deleteCard (@RequestParam Long userId, @RequestParam Long cardId) {
+		
+		Optional<DeckCreator> user = userRepository.findById(userId);
+		if(user.isPresent()) {
+			deckBuilderService.dislikeCard(user.get(), cardId);
+			return ResponseEntity.ok("Carte retirée");
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+		
+	}
+	
+	@GetMapping("GetCardLiked")
+	public ResponseEntity getCardLiked (@RequestParam Long userId) {
+		Optional<DeckCreator> user = userRepository.findById(userId);
+		
+		if(user.isPresent()) {
+			return ResponseEntity.ok(deckBuilderService.getCardLiked(user.get()));
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+	}
+
+	
 	@PostMapping("inscription")
 	public DeckCreator inscription(@RequestBody DeckCreator db) {
 		return iAuthenticationService.inscription(db);
@@ -78,25 +121,13 @@ public class AllController {
 	}
 	
 	@GetMapping("getDecks")
-	List<Deck> getDecksByFilter( @RequestParam(required = false) String name,
+	List<GetDeck> getDecksByFilter( @RequestParam(required = false) String name,
 	@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
 	@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
 	@RequestParam(required = false) List<EnumFormat> formats, @RequestParam(required = false) List<EnumColor> colors) {
 		return deckService.getDecksByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors);
 	}
 	
-	@GetMapping("getDeck")
-	Optional<Deck> getDeck (@RequestParam Long deckId) {
-		return deckRepository.findById(deckId);
-	}
-	
-		
-	@GetMapping("getCard")
-	public GetCard getCard (@RequestParam Long cardId) {
-		return cardService.getCardById(cardId);
-	}
-	
-
 	
 	@GetMapping("getCards")
 	public List<GetCard> getCardsByFilter (@RequestParam(required = false) String name, 
@@ -108,6 +139,17 @@ public class AllController {
 			@RequestParam(required = false)List<EnumRarity> rarities, @RequestParam(required = false) List<EnumEdition> editions) {
 		return cardService.getCardsByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, 
 				formats, colors, types, legendary, rarities, editions);
+	}
+	
+	@GetMapping("getDeckID")
+	public ResponseEntity getDeckById(@RequestParam Long deckID) {
+		return ResponseEntity.ok(deckService.getDeckById(deckID));
+
+	}
+	
+	@GetMapping("getCardDeckID")
+	public ResponseEntity getCardsOnDeckById(@RequestParam Long deckID) {
+		return ResponseEntity.ok(deckService.getCardsOnDeckById(deckID));
 	}
 	
 	/*

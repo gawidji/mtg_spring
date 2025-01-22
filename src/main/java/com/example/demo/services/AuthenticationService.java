@@ -80,20 +80,6 @@ public class AuthenticationService implements IAuthenticationService {
        }
     	   
        	return "echec de la connexion";
-       /*
-		try {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-		return "Vous etes connecté";
-		// UsernamePasswordAuthenticationToken implémente une interface authentication 
-		// On lui donne des données à encapsuler (email et password) qu'elle va transmettre à authenticationManager
-				}
-		
-		catch (Exception e) {
-			// TODO: handle exception
-			System.out.println(e);
-			return "Nom d'utilisateur ou mot de passe incorrect";
-					} 
-					*/
 	}
 
 }

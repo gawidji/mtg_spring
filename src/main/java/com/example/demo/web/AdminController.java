@@ -25,7 +25,7 @@ import com.example.demo.services.ColorService;
 import com.example.demo.services.FormatService;
 import com.example.demo.services.IAuthenticationService;
 import com.example.demo.services.ICardService;
-import com.example.demo.services.IAccountService;
+import com.example.demo.services.IDeckBuilderService;
 
 @RestController
 @RequestMapping("f_admin")
@@ -34,7 +34,7 @@ public class AdminController {
 	// Les requetes seulement effectuées par l'admin
 	
 	@Autowired
-	private IAccountService iAccountService;
+	private IDeckBuilderService iAccountService;
 	
 	@Autowired
 	private IAuthenticationService iAuthenticationService;

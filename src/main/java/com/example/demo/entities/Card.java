@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -90,13 +91,28 @@ public class Card {
 	@Enumerated(EnumType.STRING)
 	private EnumEdition edition;
 	
-	@ManyToMany(mappedBy = "cards")
+	@ManyToMany(mappedBy = "cardsLiked")
 	private Set<DeckCreator> deckBuilders;
 	
+	
+	@Column(name = "nb_likes")
+	private Long likeNumber;
+
+	
 	@ManyToMany(mappedBy = "cards")
-	private List<Deck> decks;
+	private Set<Deck> decks;
+	
+	/*
+	@Column(name = "nb_deck")
+	private int deckNumber;
+	*/
 	
 	@OneToMany(mappedBy = "commander", cascade = CascadeType.ALL)
 	private Set<Deck> decksCommander;
-
+	
+	/*
+	@Column(name = "nb_commander")
+	private int commanderNumber;
+	*/
+	
 }
