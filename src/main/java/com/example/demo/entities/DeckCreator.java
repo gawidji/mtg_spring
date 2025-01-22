@@ -81,7 +81,7 @@ public class DeckCreator implements UserDetails {
 	
 	@ManyToMany
     @JoinTable(
-        name = "DeckBuilders_Decks", 
+        name = "DeckBuilder_Decks", 
         joinColumns = { @JoinColumn(name = "deckBuilder_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "deck_id") }
     )	

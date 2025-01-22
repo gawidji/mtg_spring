@@ -163,9 +163,8 @@ public class DeckBuilderService implements IDeckBuilderService, UserDetailsServi
 			testDeck.setFormat(deck.getFormat());
 			testDeck.setManaCost(deck.getManaCost());
 			testDeck.setValue(deck.getValue());
-			testDeck.setDeckBuilder(deck.getDeckBuilder());
+			// testDeck.setDeckBuilder(deck.getDeckBuilder());
 			testDeck.setDeckBuilderName(deck.getDeckBuilder().getPseudo());
-			testDeck.setCards(deck.getCards());
 			
 			for (Color color : deck.getColors()) {
 				testDeck.getColors().add(color.getName());

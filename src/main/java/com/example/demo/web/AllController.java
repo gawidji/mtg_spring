@@ -106,6 +106,43 @@ public class AllController {
 		}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
 	}
+	
+	
+	
+	
+	
+	@PostMapping("likeDeck")
+	public ResponseEntity likeDeck (@RequestParam Long userId, @RequestParam Long deckId) {
+		
+		Optional<DeckCreator> user = userRepository.findById(userId);
+		if(user.isPresent()) {
+			deckBuilderService.likeDeck(user.get(), deckId);
+			return ResponseEntity.ok("Deck ajouté");
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+	}
+	
+	@DeleteMapping("dislikeDeck")
+	public ResponseEntity deleteDeck (@RequestParam Long userId, @RequestParam Long deckId) {
+		
+		Optional<DeckCreator> user = userRepository.findById(userId);
+		if(user.isPresent()) {
+			deckBuilderService.dislikeDeck(user.get(), deckId);
+			return ResponseEntity.ok("Deck retiré");
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+		
+	}
+	
+	@GetMapping("getDeckLiked")
+	public ResponseEntity getDeckLiked (@RequestParam Long userId) {
+		Optional<DeckCreator> user = userRepository.findById(userId);
+		
+		if(user.isPresent()) {
+			return ResponseEntity.ok(deckBuilderService.getDeckLiked(user.get()));
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+	}
 
 	
 	@PostMapping("inscription")
