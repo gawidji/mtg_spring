@@ -45,7 +45,7 @@ public class GetDeck {
 		
 		private Card commander;
 			
-		private int likeNumber; 
+		private Long likeNumber; 
 
 
 		

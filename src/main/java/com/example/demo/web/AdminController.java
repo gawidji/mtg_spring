@@ -20,7 +20,7 @@ import com.example.demo.entities.Color;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.entities.Format;
 import com.example.demo.enums.UserActivity;
-import com.example.demo.register.FormCard;
+import com.example.demo.form.FormCard;
 import com.example.demo.services.ColorService;
 import com.example.demo.services.FormatService;
 import com.example.demo.services.IAuthenticationService;

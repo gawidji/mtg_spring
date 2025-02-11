@@ -2,6 +2,8 @@ package com.example.demo.services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -18,7 +20,7 @@ import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
 import com.example.demo.enums.UserActivity;
-import com.example.demo.register.FormDeck;
+import com.example.demo.form.FormDeck;
 import com.example.demo.register.GetCard;
 import com.example.demo.register.GetDeck;
 import com.example.demo.entities.Card;
@@ -50,15 +52,176 @@ public class DeckService implements IDeckService {
 	private FormatRepository formatRepository;
 	
 	
+	// Méthodes f_all
+	
+	// homePage
+	
+		@Override
+		public List<GetDeck> getTopDecks() {
+			
+			List<Deck> topDecks = deckRepository.findAll();
+			topDecks.sort(Comparator.comparingLong(Deck::getLikeNumber).reversed());
+			List<GetDeck> topGetDecks = new ArrayList<>();
+			
+			for (Deck deck : topDecks) {
+				GetDeck testDeck = new GetDeck();
+				testDeck.setId(deck.getId());
+				testDeck.setName(deck.getName());
+				testDeck.setImage(deck.getImage());
+				testDeck.setDateCreation(deck.getDateCreation());
+				testDeck.setValue(deck.getValue());
+				testDeck.setManaCost(deck.getManaCost());
+				testDeck.setFormat(deck.getFormat());
+				testDeck.setLikeNumber(deck.getLikeNumber());
+				testDeck.setDeckBuilderName(deck.getDeckBuilder().getPseudo());
+				testDeck.setLikeNumber(deck.getLikeNumber());
+				
+				for (Color color : deck.getColors()) {
+					testDeck.getColors().add(color.getName());
+				}	
+				topGetDecks.add(testDeck);
+			}
+			
+			return topGetDecks;
+		}
+		
+	@Override
+	public List<GetDeck> getDecksByFilter (String name, Long manaCostMin, Long manaCostMax, 
+			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors) {
+		
+		List<Color> colorsEntities = new ArrayList<>();	
+		if(colors != null) {
+			for (EnumColor color : colors) {	
+				colorsEntities.add(colorRepository.findByName(color));
+			}
+		}
+		else {
+			colorsEntities = null;
+		}
+		List<Deck> decks = deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, false, formats, colorsEntities);
+		List<GetDeck> decksReturn = new ArrayList<>();
+
+		for (Deck deck : decks) {
+			GetDeck testDeck = new GetDeck();
+			testDeck.setId(deck.getId());
+			testDeck.setName(deck.getName());
+			testDeck.setImage(deck.getImage());
+			testDeck.setDateCreation(deck.getDateCreation());
+			testDeck.setValue(deck.getValue());
+			testDeck.setManaCost(deck.getManaCost());
+			testDeck.setFormat(deck.getFormat());
+			testDeck.setLikeNumber(deck.getLikeNumber());
+			testDeck.setDeckBuilderName(deck.getDeckBuilder().getPseudo());
+			
+			for (Color color : deck.getColors()) {
+				testDeck.getColors().add(color.getName());
+			}	
+			decksReturn.add(testDeck);
+
+		}
+		
+		return decksReturn;
+	}
+
+
+	@Override
+	public GetDeck getDeckById(Long deckID) {
+		 
+		Deck deckFind = deckRepository.findById(deckID).get();
+		 GetDeck deckReturn = new GetDeck();
+
+		 if (deckFind != null) {			 
+			 deckReturn.setId(deckFind.getId());
+			 deckReturn.setName(deckFind.getName());
+			 deckReturn.setImage(deckFind.getImage());
+			 deckReturn.setDateCreation(deckFind.getDateCreation());
+			 deckReturn.setValue(deckFind.getValue());
+			 deckReturn.setManaCost(deckFind.getManaCost());
+			 deckReturn.setFormat(deckFind.getFormat());
+			 deckReturn.setLikeNumber(deckFind.getLikeNumber());
+			 deckReturn.setDeckBuilderName(deckFind.getDeckBuilder().getPseudo());
+				
+			for (Color color : deckFind.getColors()) {
+					deckReturn.getColors().add(color.getName());
+				};
+		 }
+				return deckReturn;
+			
+		 }
+	
+	
+	
+	@Override
+	public List<GetCard> getCardsOnDeckById(Long deckID) {
+		
+		Deck deck = deckRepository.findById(deckID).get();
+		List<Card> CardsOnDeck = deck.getCards();
+		
+		List<GetCard> CardsReturn = new ArrayList<>();
+		
+		for (Card cardFind : CardsOnDeck) {
+			 GetCard cardReturn = new GetCard();
+				
+			 cardReturn.setId(cardFind.getId());
+			 cardReturn.setName(cardFind.getName());
+			 cardReturn.setText(cardFind.getText());
+			 cardReturn.setImage(cardFind.getImage());
+			 cardReturn.setManaCost(cardFind.getManaCost());
+			 cardReturn.setValue(cardFind.getValue());
+			 cardReturn.setRarity(cardFind.getRarity());
+			 cardReturn.setType(cardFind.getType());
+			 
+			 List <EnumColor> cardTestColors = new ArrayList<>();
+			 for (Color color : cardFind.getColors()) {
+				 cardTestColors.add(color.getName());
+			}
+			 cardReturn.setColors(cardTestColors);
+			 
+			 List <EnumFormat> cardTestFormats = new ArrayList<>();
+			 for (Format format : cardFind.getFormats()) {
+				 cardTestFormats.add(format.getName());
+			}
+			 cardReturn.setFormats(cardTestFormats);
+			 CardsReturn.add(cardReturn);
+		}
+			return CardsReturn;
+	}
+		
+	// Méthodes f_user
+	
+	@Override
+	public Set<GetDeck> getDecksByUser(DeckCreator dbuilder) {
+		
+		Set<Deck> decksUser = deckRepository.findByDeckBuilder(dbuilder);
+		Set<GetDeck> decksReturn = new HashSet<>();
+
+		for (Deck deck : decksUser) {
+			GetDeck testDeck = new GetDeck();
+			testDeck.setId(deck.getId());
+			testDeck.setName(deck.getName());
+			testDeck.setImage(deck.getImage());
+			testDeck.setDateCreation(deck.getDateCreation());
+			testDeck.setValue(deck.getValue());
+			testDeck.setManaCost(deck.getManaCost());
+			testDeck.setFormat(deck.getFormat());
+			testDeck.setLikeNumber(deck.getLikeNumber());
+			testDeck.setDeckBuilderName(deck.getDeckBuilder().getPseudo());
+			
+			for (Color color : deck.getColors()) {
+				testDeck.getColors().add(color.getName());
+			}	
+			decksReturn.add(testDeck);
+
+		}
+		return decksReturn;
+	}
+	
+	
 	@Override
 	public Deck addDeckWithForm (DeckCreator dbuilder, FormDeck deckRegister ) {
 		
 		
 		if(dbuilder != null) {
-			
-			dbuilder.setActivity(UserActivity.CREATOR);
-			deckBuilderRepository.save(dbuilder);
-
 			
 			Deck deck = new Deck();
 			deck.setName(deckRegister.getName());
@@ -95,7 +258,14 @@ public class DeckService implements IDeckService {
 				deck.setColors(color);
 			}
 			
-			return deckRepository.save(deck);
+			deckRepository.save(deck);
+			
+			dbuilder.setActivity(UserActivity.CREATOR);
+			dbuilder.getDecks().add(deck);
+			deckBuilderRepository.save(dbuilder);
+			
+			
+			return deck;
 
 		}
 		throw new RuntimeException("Utilisateur non trouvé");
@@ -110,9 +280,19 @@ public class DeckService implements IDeckService {
 
 		if(deck.isPresent()) {
 			
+			Deck deckFind = deck.get();
+			List <DeckCreator> dbs = deckBuilderRepository.findAll();
+			
+			for (DeckCreator deckCreator : dbs) {
+				if (deckCreator.getDecksLiked().contains(deckFind)) {
+					deckCreator.getDecksLiked().remove(deckFind);
+					deckBuilderRepository.save(deckCreator);
+				}
+			}
+			
 			deckRepository.deleteById(deckID);
 			
-			return "Deck " + deck.get().getName() + " supprimé";
+			return "Deck " + deckFind.getName() + " supprimé";
 		}
 		throw new RuntimeException("Deck non trouvé");
 	}
@@ -387,20 +567,6 @@ public class DeckService implements IDeckService {
 	}
 	
 	
-	
-	@Override
-	public Set<Deck> getDeckByUser(Long dbID) {
-		Optional<DeckCreator> dbuilder = deckBuilderRepository.findById(dbID);
-		
-		if(dbuilder.isPresent()) {
-			
-			return dbuilder.get().getDecks();
-		}
-		throw new RuntimeException("Utilisateur non trouvé");
-	}
-	// Récupère les decks pour un user
-	
-	
 	@Override
 	public Float getDeckValue(Long deckID) {
 		Optional<Deck> deck = deckRepository.findById(deckID);
@@ -448,106 +614,7 @@ public class DeckService implements IDeckService {
 	// Fais une moyenne du cout en Mana des cartes du deck qui ne sont pas des terrains
 	
 	
-	@Override
-	public List<GetDeck> getDecksByFilter (String name, Long manaCostMin, Long manaCostMax, 
-			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors) {
-		
-		List<Color> colorsEntities = new ArrayList<>();	
-		if(colors != null) {
-			for (EnumColor color : colors) {	
-				colorsEntities.add(colorRepository.findByName(color));
-			}
-		}
-		else {
-			colorsEntities = null;
-		}
-		List<Deck> decks = deckRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, false, formats, colorsEntities);
-		List<GetDeck> decksReturn = new ArrayList<>();
-
-		for (Deck deck : decks) {
-			GetDeck testDeck = new GetDeck();
-			testDeck.setId(deck.getId());
-			testDeck.setName(deck.getName());
-			testDeck.setImage(deck.getImage());
-			testDeck.setDateCreation(deck.getDateCreation());
-			testDeck.setValue(deck.getValue());
-			testDeck.setManaCost(deck.getManaCost());
-			testDeck.setFormat(deck.getFormat());
-			testDeck.setLikeNumber(deck.getLikeNumber());
-			testDeck.setDeckBuilderName(deck.getDeckBuilder().getPseudo());
-			
-			for (Color color : deck.getColors()) {
-				testDeck.getColors().add(color.getName());
-			}	
-			decksReturn.add(testDeck);
-
-		}
-		
-		return decksReturn;
-	}
-
-
-	@Override
-	public GetDeck getDeckById(Long deckID) {
-		 
-		Deck deckFind = deckRepository.findById(deckID).get();
-		 GetDeck deckReturn = new GetDeck();
-
-		 if (deckFind != null) {			 
-			 deckReturn.setId(deckFind.getId());
-			 deckReturn.setName(deckFind.getName());
-			 deckReturn.setImage(deckFind.getImage());
-			 deckReturn.setDateCreation(deckFind.getDateCreation());
-			 deckReturn.setValue(deckFind.getValue());
-			 deckReturn.setManaCost(deckFind.getManaCost());
-			 deckReturn.setFormat(deckFind.getFormat());
-			 deckReturn.setLikeNumber(deckFind.getLikeNumber());
-			 deckReturn.setDeckBuilderName(deckFind.getDeckBuilder().getPseudo());
-				
-			for (Color color : deckFind.getColors()) {
-					deckReturn.getColors().add(color.getName());
-				};
-		 }
-				return deckReturn;
-			
-		 }
 	
-	@Override
-	public List<GetCard>  getCardsOnDeckById(Long deckID) {
-		
-		Deck deck = deckRepository.findById(deckID).get();
-		List<Card> CardsOnDeck = deck.getCards();
-		
-		List<GetCard> CardsReturn = new ArrayList<>();
-		
-		for (Card cardFind : CardsOnDeck) {
-			 GetCard cardReturn = new GetCard();
-				
-			 cardReturn.setId(cardFind.getId());
-			 cardReturn.setName(cardFind.getName());
-			 cardReturn.setText(cardFind.getText());
-			 cardReturn.setImage(cardFind.getImage());
-			 cardReturn.setManaCost(cardFind.getManaCost());
-			 cardReturn.setValue(cardFind.getValue());
-			 cardReturn.setRarity(cardFind.getRarity());
-			 cardReturn.setType(cardFind.getType());
-			 
-			 List <EnumColor> cardTestColors = new ArrayList<>();
-			 for (Color color : cardFind.getColors()) {
-				 cardTestColors.add(color.getName());
-			}
-			 cardReturn.setColors(cardTestColors);
-			 
-			 List <EnumFormat> cardTestFormats = new ArrayList<>();
-			 for (Format format : cardFind.getFormats()) {
-				 cardTestFormats.add(format.getName());
-			}
-			 cardReturn.setFormats(cardTestFormats);
-			 CardsReturn.add(cardReturn);
-		}
-			return CardsReturn;
-	}
-				 
 			
 			 
 			 

@@ -1,11 +1,15 @@
 package com.example.demo.services;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.register.GetCard;
 import com.example.demo.register.GetDeck;
+import com.example.demo.register.GetDeckBuilder;
 
 public interface IDeckBuilderService {
 	
@@ -20,4 +24,5 @@ public interface IDeckBuilderService {
 	void likeDeck (DeckCreator user, Long deckID);
 	void dislikeDeck (DeckCreator user, Long deckID);
 	List<GetDeck> getDeckLiked (DeckCreator user);
+	GetDeckBuilder getDeckBuilder(DeckCreator deckBuilder);
 }

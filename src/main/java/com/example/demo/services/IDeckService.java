@@ -11,13 +11,23 @@ import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
-import com.example.demo.register.FormDeck;
+import com.example.demo.form.FormDeck;
 import com.example.demo.register.GetCard;
 import com.example.demo.register.GetDeck;
 
 public interface IDeckService {
 	
+	// Methodes f_all
+		
+		List<GetDeck> getTopDecks();
+		List<GetDeck> getDecksByFilter(String name, Long manaCostMin, Long manaCostMax, 
+		Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors);
+		GetDeck getDeckById(Long deckID);
+		List<GetCard> getCardsOnDeckById(Long deckID);
+	
 	// Methodes f_user
+	
+	Set<GetDeck> getDecksByUser(DeckCreator dbuilder);
 	
 	Deck addDeckWithForm (DeckCreator dbuilder, FormDeck deckRegister );
 	
@@ -41,18 +51,11 @@ public interface IDeckService {
 	String publishDeck(Long deckID);
 	String privateDeck(Long deckID);
 	
-	Set<Deck> getDeckByUser(Long dbID);
-	
 	Float getDeckValue(Long deckID);
 	Float getDeckManaCost(Long deckID);
 	
 	
-	// Methodes f_all
 	
-	List<GetDeck> getDecksByFilter(String name, Long manaCostMin, Long manaCostMax, 
-	Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors);
-	GetDeck getDeckById(Long deckID);
-	List<GetCard> getCardsOnDeckById(Long deckID);
 
 
 

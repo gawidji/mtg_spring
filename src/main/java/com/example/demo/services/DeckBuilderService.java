@@ -18,6 +18,7 @@ import com.example.demo.entities.Format;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.register.GetCard;
 import com.example.demo.register.GetDeck;
+import com.example.demo.register.GetDeckBuilder;
 import com.example.demo.repositories.CardRepository;
 import com.example.demo.repositories.DeckBuilderRepository;
 import com.example.demo.repositories.DeckRepository;
@@ -43,6 +44,23 @@ public class DeckBuilderService implements IDeckBuilderService, UserDetailsServi
 				.orElseThrow(() -> new UsernameNotFoundException("Cette adresse mail ne correpsond à aucun compte DeckBuilder"));
 	}
 	
+	@Override
+	public GetDeckBuilder getDeckBuilder (DeckCreator deckBuilder) {
+		Optional <DeckCreator> deckbuilder = deckBuilderRepository.findById(deckBuilder.getId());
+		if(deckbuilder.isPresent()) {
+			DeckCreator deckbuilderFind = deckbuilder.get();
+			GetDeckBuilder getDeckBuilder = new GetDeckBuilder();
+			getDeckBuilder.setId(deckbuilderFind.getId());
+			getDeckBuilder.setPseudo(deckbuilderFind.getPseudo());
+			getDeckBuilder.setEmail(deckbuilderFind.getEmail());
+			getDeckBuilder.setPassword(deckbuilderFind.getPassword());
+			getDeckBuilder.setAvatar(deckbuilderFind.getAvatar());
+			getDeckBuilder.setBio(deckbuilderFind.getBio());		
+			return getDeckBuilder;
+		}
+		throw new RuntimeException("Utilisateur non trouvé");
+
+	}
 	
 	
 	
@@ -136,6 +154,11 @@ public class DeckBuilderService implements IDeckBuilderService, UserDetailsServi
 		Deck deck = deckOpt.get();
 		user.getDecksLiked().add(deck);
 		deckBuilderRepository.save(user);
+		
+		
+		deck.setLikeNumber(deck.getLikeNumber() +1);
+		
+		deckRepository.save(deck);
 		}
 	}
 	
@@ -146,6 +169,10 @@ public class DeckBuilderService implements IDeckBuilderService, UserDetailsServi
 		Deck deck = deckOpt.get();
 		user.getDecksLiked().remove(deck);
 		deckBuilderRepository.save(user);
+		
+		deck.setLikeNumber(deck.getLikeNumber() -1);
+		
+		deckRepository.save(deck);
 		}
 	}
 	

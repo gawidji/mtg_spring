@@ -11,6 +11,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -53,7 +54,7 @@ public class Deck {
 	@Enumerated(EnumType.STRING)
 	private EnumFormat format;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "Decks_Colors", 
         joinColumns = { @JoinColumn(name = "deck_id") }, 
@@ -70,19 +71,19 @@ public class Deck {
 	@Column(name ="public", nullable = false)
 	private Boolean isPublic;
 	
-	@ManyToOne
-	@JoinColumn(name = "deck_builder_id", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "deck_builder_id", nullable = true)
     private DeckCreator deckBuilder;
 	 
 	
-	@ManyToMany(mappedBy = "decksLiked")
+	@ManyToMany(mappedBy = "decksLiked", fetch = FetchType.LAZY)
 	private Set<DeckCreator> deckBuilders = new HashSet<>();
 	
 	@Column(name = "likeNumber")
-	private int likeNumber = deckBuilders.size(); 
+	private Long likeNumber; 
 	
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "Deck_Cards", 
         joinColumns = { @JoinColumn(name = "deck_id") }, 

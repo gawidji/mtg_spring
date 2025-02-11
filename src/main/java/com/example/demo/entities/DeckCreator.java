@@ -18,6 +18,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -62,6 +63,9 @@ public class DeckCreator implements UserDetails {
 	@Column(name ="avatar", length = 500 )
 	private String avatar;
 	
+	@Column(name ="bio", length = 500 )
+	private String bio;
+	
 	@Column(name = "activite", nullable = true)
 	@Enumerated(EnumType.STRING)
 	private UserActivity activity;
@@ -71,7 +75,7 @@ public class DeckCreator implements UserDetails {
 	@Enumerated(EnumType.STRING)
     private List<UserRole> roles = new ArrayList<>();
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "DeckBuilders_Cards", 
         joinColumns = { @JoinColumn(name = "deckBuilder_id") }, 
@@ -79,7 +83,7 @@ public class DeckCreator implements UserDetails {
     )	
 	private List<Card> cardsLiked;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "DeckBuilder_Decks", 
         joinColumns = { @JoinColumn(name = "deckBuilder_id") }, 

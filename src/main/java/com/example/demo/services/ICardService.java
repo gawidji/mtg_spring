@@ -15,11 +15,13 @@ import com.example.demo.register.GetCard;
 
 public interface ICardService {
 	
+	List<GetCard> getTopCards();
+	
 	Card addCard(Card card, List<Color> cardColors, List<Format> cardFormats);
 	Card updateCard(Long cardID, Card cardUpdate);
 	String deleteCard(Long cardID);
 	
-	List<Card> getAllCards();
+	
 	List<GetCard> getCardsByFilter(String name, Long manaCostMin, Long manaCostMax, Float valueMin, Float valueMax,
 			List<EnumFormat> formats, List<EnumColor> colors, List<CardType> types, String legendary,
 			List<EnumRarity> rarities, List<EnumEdition> editions);
@@ -28,6 +30,7 @@ public interface ICardService {
 	
 	List<Card> findByColors(List<EnumColor> colors);
 	List<Card> findByFormats(List<EnumFormat> formats);
+	
 
 
 

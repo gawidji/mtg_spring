@@ -11,7 +11,6 @@ public interface IAuthenticationService {
 	DeckCreator inscription (DeckCreator deckBuilder);
 	DeckCreator addAdmin (DeckCreator deckBuilder);
 	String connexion( Map<String, String> request);
-	// String connexion(DeckCreator db);
 	
 
 }

@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +37,164 @@ public class CardService implements ICardService {
 	
 	@Autowired
 	private FormatRepository formatRepository;
-
-	//Rajouter les attributs image dés que possible dans les méthodes add
 	
+	// homePage
+	
+	@Override
+	public List<GetCard> getTopCards() {
+		
+		List<Card> topCards = cardRepository.findAll();
+		topCards.sort(Comparator.comparingLong(Card::getLikeNumber).reversed());
+		List<GetCard> topGetCards = new ArrayList<>();
+		
+		for (Card card : topCards) {
+			GetCard testCard = new GetCard();
+			testCard.setId(card.getId());
+			testCard.setName(card.getName());
+			testCard.setImage(card.getImage());
+			testCard.setText(card.getText());
+			testCard.setManaCost(card.getManaCost());
+			testCard.setValue(card.getValue());
+			testCard.setType(card.getType());
+			testCard.setRarity(card.getRarity());
+			testCard.setEdition(card.getEdition());
+			testCard.setLikeNumber(card.getLikeNumber());
+			
+			for (Color color : card.getColors()) {
+				testCard.getColors().add(color.getName());
+			}	
+			for (Format format : card.getFormats()) {
+				testCard.getFormats().add(format.getName());
+			}	
+			topGetCards.add(testCard);
+		}
+		
+		return topGetCards;
+	}
+	
+	
+	// cardsPage
+	
+	@Override
+	public List<GetCard> getCardsByFilter (String name,  Long manaCostMin, Long manaCostMax, 
+			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors, 
+			List<CardType> types, String legendary, List<EnumRarity> rarities, List<EnumEdition> editions) {
+		
+		List<Color> colorsEntities = new ArrayList<>();	
+		if(colors != null) {
+			for (EnumColor color : colors) {	
+				colorsEntities.add(colorRepository.findByName(color));
+			}
+		}
+		else {
+			colorsEntities = null;
+		}
+		
+		
+		List<Format> formatsEntities = new ArrayList<>();	
+		if(formats != null) {
+			for (EnumFormat format : formats) {
+				formatsEntities.add(formatRepository.findByName(format));
+			}
+		}
+		else {
+			formatsEntities = null;
+		}
+		
+		List<Card> cards = cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, types,
+				legendary, rarities, editions, colorsEntities, formatsEntities);
+		
+		List<GetCard> cardsReturn = new ArrayList<>();
+		
+		for (Card card : cards) {
+			GetCard testCard = new GetCard();
+			testCard.setId(card.getId());
+			testCard.setName(card.getName());
+			testCard.setImage(card.getImage());
+			testCard.setText(card.getText());
+			testCard.setType(card.getType());
+			
+			for (Color color : card.getColors()) {
+				testCard.getColors().add(color.getName());
+			}	
+			for (Format format : card.getFormats()) {
+				testCard.getFormats().add(format.getName());
+			}	
+			cardsReturn.add(testCard);
+		}
+		
+		return cardsReturn;
+
+	}
+	
+	
+	// CardSelected
+	
+	@Override
+	public GetCard getCardById(Long cardId) {
+		 
+		Card cardFind = cardRepository.findById(cardId).get();
+		 if (cardFind != null) {
+			 GetCard cardReturn = new GetCard();
+				
+			 cardReturn.setId(cardFind.getId());
+			 cardReturn.setName(cardFind.getName());
+			 cardReturn.setText(cardFind.getText());
+			 cardReturn.setImage(cardFind.getImage());
+			 cardReturn.setManaCost(cardFind.getManaCost());
+			 cardReturn.setValue(cardFind.getValue());
+			 cardReturn.setRarity(cardFind.getRarity());
+			 cardReturn.setType(cardFind.getType());
+			 
+			 List <EnumColor> cardTestColors = new ArrayList<>();
+			 for (Color color : cardFind.getColors()) {
+				 cardTestColors.add(color.getName());
+			}
+			 cardReturn.setColors(cardTestColors);
+			 
+			 List <EnumFormat> cardTestFormats = new ArrayList<>();
+			 for (Format format : cardFind.getFormats()) {
+				 cardTestFormats.add(format.getName());
+			}
+			 cardReturn.setFormats(cardTestFormats);
+			 
+			 return cardReturn;
+		 }
+		 	return null;
+
+
+	}
+	
+	
+	@Override
+	public List<Card> findByColors(List<EnumColor> colors) {
+		
+		List<Color> colorsFind = new ArrayList<>();	 
+
+		for (EnumColor color : colors) {
+			
+			colorsFind.add(colorRepository.findByName(color));
+		}
+		
+		return cardRepository.findByColorsIn(colorsFind);
+	}
+	
+	
+	@Override
+	public List<Card> findByFormats(List<EnumFormat> formats) {
+		
+		List<Format> formatsFind = new ArrayList<>();	 
+
+		for (EnumFormat format : formats) {
+			
+			formatsFind.add(formatRepository.findByName(format));
+		}
+		
+		return cardRepository.findByFormatsIn(formatsFind);
+	}
+	
+	
+	// partie admin 
 	
 	@Override
 	public Card addCard(Card card, List<Color> cardColors, List<Format> cardFormats ) {
@@ -110,130 +266,6 @@ public class CardService implements ICardService {
 		}
 		throw new RuntimeException("Carte non trouvée");
 	}
-	
-	@Override
-	public List<Card> getAllCards() {
-		return cardRepository.findAll();
-	}
-	
-	@Override
-	public GetCard getCardById(Long cardId) {
-		 
-		Card cardFind = cardRepository.findById(cardId).get();
-		 if (cardFind != null) {
-			 GetCard cardReturn = new GetCard();
-				
-			 cardReturn.setId(cardFind.getId());
-			 cardReturn.setName(cardFind.getName());
-			 cardReturn.setText(cardFind.getText());
-			 cardReturn.setImage(cardFind.getImage());
-			 cardReturn.setManaCost(cardFind.getManaCost());
-			 cardReturn.setValue(cardFind.getValue());
-			 cardReturn.setRarity(cardFind.getRarity());
-			 cardReturn.setType(cardFind.getType());
-			 
-			 List <EnumColor> cardTestColors = new ArrayList<>();
-			 for (Color color : cardFind.getColors()) {
-				 cardTestColors.add(color.getName());
-			}
-			 cardReturn.setColors(cardTestColors);
-			 
-			 List <EnumFormat> cardTestFormats = new ArrayList<>();
-			 for (Format format : cardFind.getFormats()) {
-				 cardTestFormats.add(format.getName());
-			}
-			 cardReturn.setFormats(cardTestFormats);
-			 
-			 return cardReturn;
-		 }
-		 	return null;
-
-
-	}
-	
-	
-	@Override
-	public List<GetCard> getCardsByFilter (String name,  Long manaCostMin, Long manaCostMax, 
-			Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors, 
-			List<CardType> types, String legendary, List<EnumRarity> rarities, List<EnumEdition> editions) {
-		
-		List<Color> colorsEntities = new ArrayList<>();	
-		if(colors != null) {
-			for (EnumColor color : colors) {	
-				colorsEntities.add(colorRepository.findByName(color));
-			}
-		}
-		else {
-			colorsEntities = null;
-		}
-		
-		
-		List<Format> formatsEntities = new ArrayList<>();	
-		if(formats != null) {
-			for (EnumFormat format : formats) {
-				formatsEntities.add(formatRepository.findByName(format));
-			}
-		}
-		else {
-			formatsEntities = null;
-		}
-		
-		List<Card> cards = cardRepository.findByOptionalAttribute(name, manaCostMin, manaCostMax, valueMin, valueMax, types,
-				legendary, rarities, editions, colorsEntities, formatsEntities);
-		
-		List<GetCard> cardsReturn = new ArrayList<>();
-		
-		for (Card card : cards) {
-			GetCard testCard = new GetCard();
-			testCard.setId(card.getId());
-			testCard.setName(card.getName());
-			testCard.setImage(card.getImage());
-			testCard.setText(card.getText());
-			testCard.setType(card.getType());
-			
-			for (Color color : card.getColors()) {
-				testCard.getColors().add(color.getName());
-			}	
-			for (Format format : card.getFormats()) {
-				testCard.getFormats().add(format.getName());
-			}	
-			cardsReturn.add(testCard);
-		}
-		
-		return cardsReturn;
-
-	}
-	// Filtre les cartes par tous les attributs potentiellement entrés en paramètres
-	
-	
-	@Override
-	public List<Card> findByColors(List<EnumColor> colors) {
-		
-		List<Color> colorsFind = new ArrayList<>();	 
-
-		for (EnumColor color : colors) {
-			
-			colorsFind.add(colorRepository.findByName(color));
-		}
-		
-		return cardRepository.findByColorsIn(colorsFind);
-	}
-	
-	
-	@Override
-	public List<Card> findByFormats(List<EnumFormat> formats) {
-		
-		List<Format> formatsFind = new ArrayList<>();	 
-
-		for (EnumFormat format : formats) {
-			
-			formatsFind.add(formatRepository.findByName(format));
-		}
-		
-		return cardRepository.findByFormatsIn(formatsFind);
-	}
-	
-		
 		
 	
 	

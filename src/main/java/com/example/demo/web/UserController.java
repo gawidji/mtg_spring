@@ -23,8 +23,9 @@ import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumRarity;
-import com.example.demo.register.FormDeck;
+import com.example.demo.form.FormDeck;
 import com.example.demo.repositories.DeckBuilderRepository;
+import com.example.demo.services.IAuthenticationService;
 import com.example.demo.services.IDeckBuilderService;
 import com.example.demo.services.IDeckService;
 
@@ -36,22 +37,130 @@ public class UserController {
 	// créer, modifier, rechercher des decks accessibles par les users auth
 	
 	@Autowired
-	private IDeckBuilderService iDeckBuilderService;
+	private IAuthenticationService iAuthenticationService;
+	@Autowired
+	private IDeckBuilderService deckBuilderService;
 	@Autowired
 	private IDeckService iDeckService;
 	@Autowired
 	private DeckBuilderRepository deckBuilderRepository;
 	
 	
+	
+	@GetMapping("myspace")
+	public ResponseEntity getDeckBuilder(Authentication authentication) {
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		
+		if(user.isPresent()) {
+			return ResponseEntity.ok(deckBuilderService.getDeckBuilder(user.get()));
+		}
+		
+    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+
+	}
+	
+	@PostMapping("likeCard")
+	public ResponseEntity likeCard (Authentication authentication, @RequestParam Long cardId) {
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		if(user.isPresent()) {
+			deckBuilderService.likeCard(user.get(), cardId);
+			return ResponseEntity.ok("Carte ajoutée");
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+	}
+	
+	@DeleteMapping("dislikeCard")
+	public ResponseEntity deleteCard (Authentication authentication, @RequestParam Long cardId) {
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		if(user.isPresent()) {
+			deckBuilderService.dislikeCard(user.get(), cardId);
+			return ResponseEntity.ok("Carte retirée");
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+		
+	}
+	
+	@GetMapping("GetCardLiked")
+	public ResponseEntity getCardLiked (Authentication authentication) {
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		
+		if(user.isPresent()) {
+			return ResponseEntity.ok(deckBuilderService.getCardLiked(user.get()));
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+	}
+	
+	
+	
+	
+	
+	@PostMapping("likeDeck")
+	public ResponseEntity likeDeck (Authentication authentication, @RequestParam Long deckId) {
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		
+		if(user.isPresent()) {
+			deckBuilderService.likeDeck(user.get(), deckId);
+			return ResponseEntity.ok("Deck ajouté");
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+	}
+	
+	@DeleteMapping("dislikeDeck")
+	public ResponseEntity deleteDeck (Authentication authentication, @RequestParam Long deckId) {
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		
+		if(user.isPresent()) {
+			deckBuilderService.dislikeDeck(user.get(), deckId);
+			return ResponseEntity.ok("Deck retiré");
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+		
+	}
+	
+	@GetMapping("getDeckLiked")
+	public ResponseEntity getDeckLiked (Authentication authentication) {
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		
+		if(user.isPresent()) {
+			return ResponseEntity.ok(deckBuilderService.getDeckLiked(user.get()));
+		}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+	}
+
+	
+	@PostMapping("inscription")
+	public DeckCreator inscription(@RequestBody DeckCreator db) {
+		return iAuthenticationService.inscription(db);
+		
+	}
+	
+	@GetMapping("getDecksByUser")
+	public ResponseEntity getDecksByUser(Authentication authentication){
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		if(user.isPresent()) {
+			return ResponseEntity.ok(iDeckService.getDecksByUser(user.get()));
+		}
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+	}
+
+	
 	@PutMapping("updateAccount")
 	public DeckCreator updateAccount(@RequestParam String email, @RequestBody DeckCreator deckBuilder) {
-		return iDeckBuilderService.updateAccount(email, deckBuilder);
+		return deckBuilderService.updateAccount(email, deckBuilder);
 	}
 	// Nécessite une atuh par token pour que email soit celui de l'user connecté
 	
 	@DeleteMapping("deleteAccount")
 	public String deleteAccount(@RequestParam Long dbID) {
-		return iDeckBuilderService.deleteDeckBuilder(dbID);
+		return deckBuilderService.deleteDeckBuilder(dbID);
 	}
 	// Appel de deleteDeckBuilder mais doit nécessité une auth par token pour que le dbID soit celui de l'user connecté
 	
@@ -133,12 +242,6 @@ public class UserController {
 		return iDeckService.privateDeck(deckID);
 	}
 	
-	
-	@GetMapping("getDeckByUser")
-	public Set<Deck> getDeckByUser(Long dbID){
-		return iDeckService.getDeckByUser(dbID);
-	}
-
 	
 	@GetMapping("deckValue")
 	public float getDeckValue(@RequestParam Long deckID) {

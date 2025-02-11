@@ -14,6 +14,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -91,7 +92,7 @@ public class Card {
 	@Enumerated(EnumType.STRING)
 	private EnumEdition edition;
 	
-	@ManyToMany(mappedBy = "cardsLiked")
+	@ManyToMany(mappedBy = "cardsLiked", fetch = FetchType.LAZY)
 	private Set<DeckCreator> deckBuilders;
 	
 	
@@ -102,10 +103,8 @@ public class Card {
 	@ManyToMany(mappedBy = "cards")
 	private Set<Deck> decks;
 	
-	/*
-	@Column(name = "nb_deck")
-	private int deckNumber;
-	*/
+	@Column(name = "nb_decks")
+	private Long deckNumber;
 	
 	@OneToMany(mappedBy = "commander", cascade = CascadeType.ALL)
 	private Set<Deck> decksCommander;

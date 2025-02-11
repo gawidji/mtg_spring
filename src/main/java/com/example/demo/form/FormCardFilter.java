@@ -1,4 +1,4 @@
-package com.example.demo.register;
+package com.example.demo.form;
 
 import java.util.ArrayList;
 import java.util.List;

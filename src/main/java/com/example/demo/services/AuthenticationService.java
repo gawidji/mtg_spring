@@ -65,21 +65,21 @@ public class AuthenticationService implements IAuthenticationService {
 	
 	@Override
 	public String connexion(Map<String, String> request) {
-		String email = request.get("email");
-       String password = request.get("password");
+	 String email = request.get("email");
+     String password = request.get("password");
        
        Optional<DeckCreator> user = deckBuilderRepository.findByEmail(email);
+
        
        if(user.isPresent()) {
 	       DeckCreator userFind = user.get();
-	
+	 
 	       if(passwordEncoder.matches(password, userFind.getPassword())) {
 	    	   String jwt = jwtService.generateToken(userFind);
-	    	   return "Connexion réussie " + jwt;
+	    	   return jwt;
 	    	}
        }
-    	   
-       	return "echec de la connexion";
+       	throw new Error("echec de la connexion");
 	}
 
 }

@@ -2,6 +2,7 @@ package com.example.demo.repositories;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,9 +19,9 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 	
 	Optional<Deck> findByName(String name);
 	List<Deck> findByNameContaining(String nom);
-	List <Deck> findByDeckBuilder (DeckCreator deckBuilder);
 	List<Deck> findByFormat(EnumFormat format);
 	List<Deck> findByColors (EnumColor color);
+	Set<Deck> findByDeckBuilder(DeckCreator user);
 	
 	@Query("SELECT d FROM Deck d " +
 				"LEFT JOIN d.colors Color " +

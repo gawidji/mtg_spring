@@ -74,97 +74,26 @@ public class AllController {
 	DeckBuilderRepository userRepository;
 	
 	
-	@PostMapping("likeCard")
-	public ResponseEntity likeCard (@RequestParam Long userId, @RequestParam Long cardId) {
-		
-		Optional<DeckCreator> user = userRepository.findById(userId);
-		if(user.isPresent()) {
-			deckBuilderService.likeCard(user.get(), cardId);
-			return ResponseEntity.ok("Carte ajoutée");
-		}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
-	}
-	
-	@DeleteMapping("dislikeCard")
-	public ResponseEntity deleteCard (@RequestParam Long userId, @RequestParam Long cardId) {
-		
-		Optional<DeckCreator> user = userRepository.findById(userId);
-		if(user.isPresent()) {
-			deckBuilderService.dislikeCard(user.get(), cardId);
-			return ResponseEntity.ok("Carte retirée");
-		}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
-		
-	}
-	
-	@GetMapping("GetCardLiked")
-	public ResponseEntity getCardLiked (@RequestParam Long userId) {
-		Optional<DeckCreator> user = userRepository.findById(userId);
-		
-		if(user.isPresent()) {
-			return ResponseEntity.ok(deckBuilderService.getCardLiked(user.get()));
-		}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
-	}
-	
-	
-	
-	
-	
-	@PostMapping("likeDeck")
-	public ResponseEntity likeDeck (@RequestParam Long userId, @RequestParam Long deckId) {
-		
-		Optional<DeckCreator> user = userRepository.findById(userId);
-		if(user.isPresent()) {
-			deckBuilderService.likeDeck(user.get(), deckId);
-			return ResponseEntity.ok("Deck ajouté");
-		}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
-	}
-	
-	@DeleteMapping("dislikeDeck")
-	public ResponseEntity deleteDeck (@RequestParam Long userId, @RequestParam Long deckId) {
-		
-		Optional<DeckCreator> user = userRepository.findById(userId);
-		if(user.isPresent()) {
-			deckBuilderService.dislikeDeck(user.get(), deckId);
-			return ResponseEntity.ok("Deck retiré");
-		}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
-		
-	}
-	
-	@GetMapping("getDeckLiked")
-	public ResponseEntity getDeckLiked (@RequestParam Long userId) {
-		Optional<DeckCreator> user = userRepository.findById(userId);
-		
-		if(user.isPresent()) {
-			return ResponseEntity.ok(deckBuilderService.getDeckLiked(user.get()));
-		}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
-	}
-
-	
 	@PostMapping("inscription")
 	public DeckCreator inscription(@RequestBody DeckCreator db) {
 		return iAuthenticationService.inscription(db);
 		
 	}
 	
-	
 	@PostMapping("connexion")
-	public String connexion(@RequestBody Map<String, String> request) {
+	public String connexion(@RequestBody Map<String, String> request ) {
 		return iAuthenticationService.connexion(request);
 	}
 	
-	@GetMapping("getDecks")
-	List<GetDeck> getDecksByFilter( @RequestParam(required = false) String name,
-	@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
-	@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
-	@RequestParam(required = false) List<EnumFormat> formats, @RequestParam(required = false) List<EnumColor> colors) {
-		return deckService.getDecksByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors);
+	@GetMapping("getTopCards")
+	public List<GetCard> getTopCards() {
+		return cardService.getTopCards();
 	}
 	
+	@GetMapping("getTopDecks")
+	public List<GetDeck> getTopDecks() {
+		return deckService.getTopDecks();
+	}
 	
 	@GetMapping("getCards")
 	public List<GetCard> getCardsByFilter (@RequestParam(required = false) String name, 
@@ -178,9 +107,23 @@ public class AllController {
 				formats, colors, types, legendary, rarities, editions);
 	}
 	
+	@GetMapping("getDecks")
+	List<GetDeck> getDecksByFilter( @RequestParam(required = false) String name,
+	@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
+	@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
+	@RequestParam(required = false) List<EnumFormat> formats, @RequestParam(required = false) List<EnumColor> colors) {
+		return deckService.getDecksByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, formats, colors);
+	}
+	
 	@GetMapping("getDeckID")
 	public ResponseEntity getDeckById(@RequestParam Long deckID) {
 		return ResponseEntity.ok(deckService.getDeckById(deckID));
+
+	}
+	
+	@GetMapping("getCardID")
+	public ResponseEntity getCardById(@RequestParam Long cardID) {
+		return ResponseEntity.ok(cardService.getCardById(cardID));
 
 	}
 	
