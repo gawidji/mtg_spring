@@ -21,6 +21,7 @@ import com.example.demo.entities.Card;
 import com.example.demo.entities.Deck;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.CardType;
+import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumRarity;
 import com.example.demo.form.FormDeck;
@@ -46,6 +47,7 @@ public class UserController {
 	private DeckBuilderRepository deckBuilderRepository;
 	
 	
+	// Afficher sur le profil
 	
 	@GetMapping("myspace")
 	public ResponseEntity getDeckBuilder(Authentication authentication) {
@@ -60,13 +62,43 @@ public class UserController {
 
 	}
 	
+	@GetMapping("getDecksByUser")
+	public ResponseEntity getDecksByUser(Authentication authentication){
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		if(user.isPresent()) {
+			return ResponseEntity.ok(iDeckService.getDecksByUser(user.get()));
+		}
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+	}
+
+	
+	@PutMapping("updateAccount")
+	public DeckCreator updateAccount(@RequestParam String email, @RequestBody DeckCreator deckBuilder) {
+		return deckBuilderService.updateAccount(email, deckBuilder);
+	}
+	// Nécessite une atuh par token pour que email soit celui de l'user connecté
+	
+	@DeleteMapping("deleteAccount")
+	public String deleteAccount(@RequestParam Long dbID) {
+		return deckBuilderService.deleteDeckBuilder(dbID);
+	}
+	// Appel de deleteDeckBuilder mais doit nécessité une auth par token pour que le dbID soit celui de l'user connecté
+	
+	
+	
+	
+	
+	
+	// Liker des objets
+	
 	@PostMapping("likeCard")
 	public ResponseEntity likeCard (Authentication authentication, @RequestParam Long cardId) {
 		
 		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
 		if(user.isPresent()) {
 			deckBuilderService.likeCard(user.get(), cardId);
-			return ResponseEntity.ok("Carte ajoutée");
+			return ResponseEntity.ok("Carte likée");
 		}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
 	}
@@ -77,7 +109,7 @@ public class UserController {
 		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
 		if(user.isPresent()) {
 			deckBuilderService.dislikeCard(user.get(), cardId);
-			return ResponseEntity.ok("Carte retirée");
+			return ResponseEntity.ok("Carte dislikée");
 		}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
 		
@@ -94,10 +126,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
 	}
 	
-	
-	
-	
-	
+		
 	@PostMapping("likeDeck")
 	public ResponseEntity likeDeck (Authentication authentication, @RequestParam Long deckId) {
 		
@@ -135,34 +164,8 @@ public class UserController {
 	}
 
 	
-	@PostMapping("inscription")
-	public DeckCreator inscription(@RequestBody DeckCreator db) {
-		return iAuthenticationService.inscription(db);
-		
-	}
 	
-	@GetMapping("getDecksByUser")
-	public ResponseEntity getDecksByUser(Authentication authentication){
-		
-		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
-		if(user.isPresent()) {
-			return ResponseEntity.ok(iDeckService.getDecksByUser(user.get()));
-		}
-    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
-	}
-
-	
-	@PutMapping("updateAccount")
-	public DeckCreator updateAccount(@RequestParam String email, @RequestBody DeckCreator deckBuilder) {
-		return deckBuilderService.updateAccount(email, deckBuilder);
-	}
-	// Nécessite une atuh par token pour que email soit celui de l'user connecté
-	
-	@DeleteMapping("deleteAccount")
-	public String deleteAccount(@RequestParam Long dbID) {
-		return deckBuilderService.deleteDeckBuilder(dbID);
-	}
-	// Appel de deleteDeckBuilder mais doit nécessité une auth par token pour que le dbID soit celui de l'user connecté
+	// Construire un deck
 	
 	
 	@PostMapping("addDeck")
@@ -171,8 +174,7 @@ public class UserController {
 		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
 		
 		if(user.isPresent()) {
-			iDeckService.addDeckWithForm(user.get(), deckRegister);
-			return ResponseEntity.ok("Nouveau deck créé : " + deckRegister.getName() );
+			return ResponseEntity.ok(iDeckService.addDeckWithForm(user.get(), deckRegister));
 		}
 		
     	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
@@ -189,8 +191,8 @@ public class UserController {
 		return iDeckService.updateDeck(deckID, deckUpdate);
 	}
 
-	@GetMapping("getCards")
-	public List<Card> getCardsByFilterForDeck (@RequestParam Long deckId, @RequestParam(required = false) String name,
+	@GetMapping("getCardsForDeck")
+	public List<Card> getCardsByFilterForDeck (Authentication authentication, @RequestParam Long deckId, @RequestParam(required = false) String name,
 			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
 			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
 			@RequestParam(required = false) List <CardType> types, @RequestParam(required = false) String legendary,
@@ -215,11 +217,17 @@ public class UserController {
 	public Deck addCommanderOnDeck(Long cardId, Long deckId) {
 		return iDeckService.addCommanderOnDeck(cardId, deckId);
 	}
+	
 	*/
 	
 	@PostMapping("addCardOnDeck")
-	public Deck addCardOnDeck(Authentication authentication, @RequestParam Long cardId, @RequestParam Long deckId) {
+	public Deck addCardOnDeck( @RequestParam Long cardId, @RequestParam Long deckId) {
 		return iDeckService.addCardOnDeck(cardId, deckId);
+	}
+	
+	@PostMapping("addCardsOnDeck")
+	public ResponseEntity addCardsOnDeck( @RequestParam List<Long> cardId, @RequestParam Long deckId) {
+		return ResponseEntity.ok(iDeckService.addCardsOnDeck(cardId, deckId));
 	}
 	
 	@DeleteMapping("deleteCardOnDeck")
@@ -242,6 +250,7 @@ public class UserController {
 		return iDeckService.privateDeck(deckID);
 	}
 	
+	// Méthodes d'affichage dans le deckbuilding
 	
 	@GetMapping("deckValue")
 	public float getDeckValue(@RequestParam Long deckID) {
@@ -253,9 +262,13 @@ public class UserController {
 		return iDeckService.getDeckManaCost(deckID);
 	}
 	
+	@GetMapping("deckColors")
+	public List<EnumColor>  getDeckColors(@RequestParam Long deckID) {
+		return iDeckService.getDeckColors(deckID);
+	}
 	
 	
-	// Toutes les méthodes sont la 
+	 
 
 
 }

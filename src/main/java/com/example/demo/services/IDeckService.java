@@ -20,6 +20,7 @@ public interface IDeckService {
 	// Methodes f_all
 		
 		List<GetDeck> getTopDecks();
+		List<GetDeck> getTop3Decks();
 		List<GetDeck> getDecksByFilter(String name, Long manaCostMin, Long manaCostMax, 
 		Float valueMin,	Float valueMax, List<EnumFormat> formats, List<EnumColor> colors);
 		GetDeck getDeckById(Long deckID);
@@ -29,7 +30,7 @@ public interface IDeckService {
 	
 	Set<GetDeck> getDecksByUser(DeckCreator dbuilder);
 	
-	Deck addDeckWithForm (DeckCreator dbuilder, FormDeck deckRegister );
+	Long addDeckWithForm (DeckCreator dbuilder, FormDeck deckRegister );
 	
 	
 	String deleteDeck(Long deckID);
@@ -42,6 +43,7 @@ public interface IDeckService {
 			Float valueMax, List<EnumRarity> rarities, List<EnumEdition> editions);
 		 */
 	Deck addCardOnDeck(Long cardId, Long deckId);
+	Deck addCardsOnDeck(List<Long> cardId, Long deckId);
 	Deck addCommanderOnDeck(Long cardId, Long deckId);
 
 
@@ -53,6 +55,7 @@ public interface IDeckService {
 	
 	Float getDeckValue(Long deckID);
 	Float getDeckManaCost(Long deckID);
+	List<EnumColor> getDeckColors (Long deckID);
 	
 	
 	

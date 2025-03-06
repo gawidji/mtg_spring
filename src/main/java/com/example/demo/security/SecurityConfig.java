@@ -46,6 +46,7 @@ public class SecurityConfig {
     	
     	// Desactivation de csrf pour que les requetes ne soient plus dans des sessions indépendantes 
 		//le serveur retient l'identité de l'user après son auth (identification stateless)
+    	
     return	httpSecurity.csrf(csrf -> csrf.disable())
     	.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/f_all/**").permitAll()

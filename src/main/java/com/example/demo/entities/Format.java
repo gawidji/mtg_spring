@@ -43,6 +43,9 @@ public class Format implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EnumFormat name;
 	
+	@Column(name = "texte")
+	private String text;
+	
 	@ManyToMany(mappedBy = "formats", fetch = FetchType.LAZY)
 	private List<Card> cards;
 

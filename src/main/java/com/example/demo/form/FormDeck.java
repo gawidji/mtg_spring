@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.demo.entities.Color;
 import com.example.demo.entities.Deck;
+import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumFormat;
 
 import lombok.AllArgsConstructor;
@@ -23,14 +24,6 @@ public class FormDeck {
 	
 	private EnumFormat format;
 	
-	private boolean bleu;
-	private boolean blanc;
-	private boolean vert;
-	private boolean rouge;
-	private boolean noir;
-	private boolean incolore;
-
-	
-	// private List<Color> colors;
+	private List<EnumColor> colors;
 	
 }

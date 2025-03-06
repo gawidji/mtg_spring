@@ -59,7 +59,16 @@ public class DeckService implements IDeckService {
 		@Override
 		public List<GetDeck> getTopDecks() {
 			
-			List<Deck> topDecks = deckRepository.findAll();
+			List<Deck> decks = deckRepository.findAll();
+			List<Deck> topDecks = new ArrayList<>();
+			
+			for (Deck deck : decks) {
+				if(deck.getLikeNumber() != null) {
+					topDecks.add(deck);
+				}
+				
+			}
+			
 			topDecks.sort(Comparator.comparingLong(Deck::getLikeNumber).reversed());
 			List<GetDeck> topGetDecks = new ArrayList<>();
 			
@@ -79,6 +88,46 @@ public class DeckService implements IDeckService {
 				for (Color color : deck.getColors()) {
 					testDeck.getColors().add(color.getName());
 				}	
+				topGetDecks.add(testDeck);
+			}
+			
+			return topGetDecks;
+		}
+		
+		@Override
+		public List<GetDeck> getTop3Decks() {
+			
+			List<Deck> decks = deckRepository.findAll();
+			List<Deck> topDecks = new ArrayList<>();
+			
+			for (Deck deck : decks) {
+				if(deck.getLikeNumber() != null) {
+					topDecks.add(deck);
+				}
+				
+			}
+			
+			topDecks.sort(Comparator.comparingLong(Deck::getLikeNumber).reversed());
+			List<GetDeck> topGetDecks = new ArrayList<>();
+			
+			for (Deck deck : topDecks) {
+				GetDeck testDeck = new GetDeck();
+				testDeck.setId(deck.getId());
+				testDeck.setName(deck.getName());
+				testDeck.setImage(deck.getImage());
+				testDeck.setDateCreation(deck.getDateCreation());
+				testDeck.setValue(deck.getValue());
+				testDeck.setManaCost(deck.getManaCost());
+				testDeck.setFormat(deck.getFormat());
+				testDeck.setLikeNumber(deck.getLikeNumber());
+				testDeck.setDeckBuilderName(deck.getDeckBuilder().getPseudo());
+				testDeck.setLikeNumber(deck.getLikeNumber());
+				
+				for (Color color : deck.getColors()) {
+					testDeck.getColors().add(color.getName());
+				}	
+				if(topGetDecks.size() == 3) {
+					break; }
 				topGetDecks.add(testDeck);
 			}
 			
@@ -218,7 +267,7 @@ public class DeckService implements IDeckService {
 	
 	
 	@Override
-	public Deck addDeckWithForm (DeckCreator dbuilder, FormDeck deckRegister ) {
+	public Long addDeckWithForm (DeckCreator dbuilder, FormDeck deckRegister ) {
 		
 		
 		if(dbuilder != null) {
@@ -231,41 +280,20 @@ public class DeckService implements IDeckService {
 			deck.setIsPublic(false);
 			deck.setDeckBuilder(dbuilder);
 			
-			if(deckRegister.isBleu()) {
-				Color colorBleu = colorRepository.findByName(EnumColor.BLEU);
-				deck.getColors().add(colorBleu);
-			}
-			if(deckRegister.isBlanc()) {
-				Color colorBlanc = colorRepository.findByName(EnumColor.BLANC);
-				deck.getColors().add(colorBlanc);
-			}
-			if(deckRegister.isVert()) {
-				Color colorVert = colorRepository.findByName(EnumColor.VERT);
-				deck.getColors().add(colorVert);
-			}
-			if(deckRegister.isRouge()) {
-				Color colorRouge = colorRepository.findByName(EnumColor.ROUGE);
-				deck.getColors().add(colorRouge);
-			}
-			if(deckRegister.isNoir()) {
-				Color colorNoir = colorRepository.findByName(EnumColor.NOIR);
-				deck.getColors().add(colorNoir);
-			}
-			if(deckRegister.isIncolore()) {
-				Color colorIncolore = colorRepository.findByName(EnumColor.INCOLORE);
-				List<Color> color = new ArrayList<>();
-				color.add(colorIncolore);
-				deck.setColors(color);
+			for (EnumColor color : deckRegister.getColors()) {
+				Color newColor = colorRepository.findByName(color);
+				deck.getColors().add(newColor);
 			}
 			
+				
 			deckRepository.save(deck);
 			
 			dbuilder.setActivity(UserActivity.CREATOR);
-			dbuilder.getDecks().add(deck);
+			//dbuilder.getDecks().add(deck);
 			deckBuilderRepository.save(dbuilder);
 			
 			
-			return deck;
+			return deck.getId();
 
 		}
 		throw new RuntimeException("Utilisateur non trouvé");
@@ -460,6 +488,69 @@ public class DeckService implements IDeckService {
 	// et si la list ne dépasse pas 100 cartes dans le cas d'un format commander
 	// Appelle les fonctions getDeckManaCost et getDeckValue pour calculer ses valeurs une fois la carte ajoutée
 	
+	
+	@Override
+	public Deck addCardsOnDeck(List<Long> cardsId, Long deckId) {
+		
+		Optional<Deck> deckToTarget = deckRepository.findById(deckId);
+		
+		for (Long cardId : cardsId) {
+		
+			Optional<Card> cardToAdd = cardRepository.findById(cardId);
+			
+			
+		
+			if(cardToAdd.isPresent() && deckToTarget.isPresent()) {
+				
+				System.out.println(cardToAdd.get().getName());
+				
+				boolean communColor = false;
+			
+					for (Color deckColor : deckToTarget.get().getColors()) {
+						for (Color cardColor : cardToAdd.get().getColors()) {
+							if(deckColor.equals(cardColor)) {
+								communColor = true;
+								System.out.println(communColor);
+								break;
+					}
+				}
+			}
+			
+				boolean communFormat = false;
+			
+				for (Format formatCard : cardToAdd.get().getFormats()) {
+					if(formatCard.getName().equals(deckToTarget.get().getFormat())) {
+						communFormat = true;
+						System.out.println(communFormat);
+						break;
+					}
+				}
+			
+						if(communFormat == true && communColor == true	) {
+											
+							deckToTarget.get().getCards().add(cardToAdd.get());					
+							deckToTarget.get().setManaCost(getDeckManaCost(deckToTarget.get().getId()));
+							deckToTarget.get().setValue(getDeckValue(deckToTarget.get().getId()));
+			
+									
+							deckRepository.save(deckToTarget.get());
+					
+					}
+						else { throw new RuntimeException("Couleur ou format de la carte incompatible avec ce deck");
+							}
+					}
+			
+			else {
+		
+			throw new RuntimeException("Deck non trouvé");
+			}
+		
+		}
+		
+		return deckToTarget.get();
+		
+	}
+	
 	@Override
 	public Deck addCommanderOnDeck(Long cardId, Long deckId) {
 			
@@ -476,7 +567,7 @@ public class DeckService implements IDeckService {
 				throw new RuntimeException("Couleur ou format de la carte incompatible avec ce deck");
 			}
 			throw new RuntimeException("Deck ou carte non trouvé");
-	
+		
 			
 	}
 	
@@ -576,13 +667,15 @@ public class DeckService implements IDeckService {
 		if(deck.isPresent()) {
 			 List<Card> cardsDeck = deck.get().getCards();
 			 for (Card cards : cardsDeck) {
-				 Float cardValue = cards.getValue();
-				 deckValue += cardValue;
+				 if(!cards.getType().equals(CardType.TERRAIN) ) {
+					 Float cardValue = cards.getValue();
+					 deckValue += cardValue;
+				 }
 				
 			}
 		return deckValue;
 		}
-		throw new RuntimeException("Utilisateur non trouvé");
+		throw new RuntimeException("Deck non trouvé");
 	}
 	// Donne la somme des valeurs des cartes du deck pour obtenir son cout total 
 	
@@ -609,12 +702,29 @@ public class DeckService implements IDeckService {
 			
 		return deckManaCostMoy;
 		}
-		throw new RuntimeException("Utilisateur non trouvé");
+		throw new RuntimeException("Deck non trouvé");
 	}
 	// Fais une moyenne du cout en Mana des cartes du deck qui ne sont pas des terrains
 	
 	
 	
+	@Override
+	public List<EnumColor> getDeckColors (Long deckID) { 
+		
+		Optional<Deck> deck = deckRepository.findById(deckID);
+		
+		if(deck.isPresent()) {
+			List<EnumColor> deckColors = new ArrayList<>();
+			
+			for (Color color : deck.get().getColors()) {
+				EnumColor colorName = color.getName();
+				deckColors.add(colorName);				
+			}
+			
+			return deckColors;
+		}
+		throw new RuntimeException("Deck non trouvé");
+	}
 			
 			 
 			 

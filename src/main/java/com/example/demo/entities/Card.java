@@ -109,9 +109,8 @@ public class Card {
 	@OneToMany(mappedBy = "commander", cascade = CascadeType.ALL)
 	private Set<Deck> decksCommander;
 	
-	/*
 	@Column(name = "nb_commander")
-	private int commanderNumber;
-	*/
+	private Long commanderNumber;
+	
 	
 }

@@ -90,9 +90,19 @@ public class AllController {
 		return cardService.getTopCards();
 	}
 	
+	@GetMapping("getTop3Cards")
+	public List<GetCard> getTop3Cards() {
+		return cardService.getTop3Cards();
+	}
+	
 	@GetMapping("getTopDecks")
 	public List<GetDeck> getTopDecks() {
 		return deckService.getTopDecks();
+	}
+	
+	@GetMapping("getTop3Decks")
+	public List<GetDeck> getTop3Decks() {
+		return deckService.getTop3Decks();
 	}
 	
 	@GetMapping("getCards")

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.example.demo.entities.Card;
 import com.example.demo.entities.Color;
-import com.example.demo.entities.DeckCreator;
 import com.example.demo.entities.Format;
 import com.example.demo.enums.CardType;
 import com.example.demo.enums.EnumColor;
@@ -16,6 +15,7 @@ import com.example.demo.register.GetCard;
 public interface ICardService {
 	
 	List<GetCard> getTopCards();
+	List<GetCard> getTop3Cards();
 	
 	Card addCard(Card card, List<Color> cardColors, List<Format> cardFormats);
 	Card updateCard(Long cardID, Card cardUpdate);
@@ -23,13 +23,15 @@ public interface ICardService {
 	
 	
 	List<GetCard> getCardsByFilter(String name, Long manaCostMin, Long manaCostMax, Float valueMin, Float valueMax,
-			List<EnumFormat> formats, List<EnumColor> colors, List<CardType> types, String legendary,
-			List<EnumRarity> rarities, List<EnumEdition> editions);
+	List<EnumFormat> formats, List<EnumColor> colors, List<CardType> types, String legendary,
+	List<EnumRarity> rarities, List<EnumEdition> editions);
 	GetCard getCardById(Long cardId);
 
 	
 	List<Card> findByColors(List<EnumColor> colors);
 	List<Card> findByFormats(List<EnumFormat> formats);
+
+	
 	
 
 

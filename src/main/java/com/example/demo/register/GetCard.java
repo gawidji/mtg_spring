@@ -46,5 +46,9 @@ public class GetCard {
 	private Set<Deck> decksCommander;
 	
 	private Long likeNumber;
+	
+	private Long deckNumber;
+	
+	private Long commanderNumber;
 
 }

@@ -43,7 +43,17 @@ public class CardService implements ICardService {
 	@Override
 	public List<GetCard> getTopCards() {
 		
-		List<Card> topCards = cardRepository.findAll();
+		List<Card> cards = cardRepository.findAll();
+		List<Card> topCards = new ArrayList<>();
+		
+		for (Card card : cards) {
+			if(card.getLikeNumber() != null) {
+				topCards.add(card);
+			}
+			
+		}
+		
+		
 		topCards.sort(Comparator.comparingLong(Card::getLikeNumber).reversed());
 		List<GetCard> topGetCards = new ArrayList<>();
 		
@@ -71,6 +81,51 @@ public class CardService implements ICardService {
 		
 		return topGetCards;
 	}
+	
+	@Override
+	public List<GetCard> getTop3Cards() {
+		
+		List<Card> cards = cardRepository.findAll();
+		List<Card> topCards = new ArrayList<>();
+		
+		for (Card card : cards) {
+			if(card.getLikeNumber() != null) {
+				topCards.add(card);
+			}
+			
+		}
+		topCards.sort(Comparator.comparingLong(Card::getLikeNumber).reversed());
+				
+		List<GetCard> topGetCards = new ArrayList<>();
+		
+		for (Card card : topCards) {
+			GetCard testCard = new GetCard();
+			testCard.setId(card.getId());
+			testCard.setName(card.getName());
+			testCard.setImage(card.getImage());
+			testCard.setText(card.getText());
+			testCard.setManaCost(card.getManaCost());
+			testCard.setValue(card.getValue());
+			testCard.setType(card.getType());
+			testCard.setRarity(card.getRarity());
+			testCard.setEdition(card.getEdition());
+			testCard.setLikeNumber(card.getLikeNumber());
+			
+			for (Color color : card.getColors()) {
+				testCard.getColors().add(color.getName());
+			}	
+			for (Format format : card.getFormats()) {
+				testCard.getFormats().add(format.getName());
+			}	
+			topGetCards.add(testCard);
+			if(topGetCards.size() == 3) {
+				break;
+			}
+		}
+		
+		return topGetCards;
+	}
+	
 	
 	
 	// cardsPage
