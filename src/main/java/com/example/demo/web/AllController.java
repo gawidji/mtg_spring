@@ -26,6 +26,7 @@ import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
+import com.example.demo.enums.UserActivity;
 import com.example.demo.register.GetCard;
 import com.example.demo.register.GetDeck;
 import com.example.demo.repositories.CardRepository;
@@ -115,6 +116,17 @@ public class AllController {
 			@RequestParam(required = false)List<EnumRarity> rarities, @RequestParam(required = false) List<EnumEdition> editions) {
 		return cardService.getCardsByFilter(name, manaCostMin, manaCostMax, valueMin, valueMax, 
 				formats, colors, types, legendary, rarities, editions);
+	}
+	
+	@GetMapping("getCardsForDeck")
+	public List<GetCard> getCardsForDeck (@RequestParam Long DeckID, @RequestParam(required = false) String name, 
+			@RequestParam(required = false) Long manaCostMin, @RequestParam(required = false) Long manaCostMax,
+			@RequestParam(required = false) Float valueMin, @RequestParam(required = false) Float valueMax,
+			@RequestParam(required = false)List<EnumColor> colorFilter, @RequestParam(required = false) List<CardType> types,
+			@RequestParam(required = false) String legendary,
+			@RequestParam(required = false)List<EnumRarity> rarities, @RequestParam(required = false) List<EnumEdition> editions) {
+		return cardService.getCardsForDeck(DeckID, name, manaCostMin, manaCostMax, valueMin, valueMax, 
+				colorFilter, types, legendary, rarities, editions);
 	}
 	
 	@GetMapping("getDecks")
@@ -232,6 +244,11 @@ public class AllController {
 	@GetMapping("getTypes")
 	public List<CardType> getTypes() {
 		return enumService.getTypes();
+	}
+	
+	@GetMapping("getActivities")
+	public List<UserActivity> getActivities() {
+		return enumService.getActivities();
 	}
 
 }

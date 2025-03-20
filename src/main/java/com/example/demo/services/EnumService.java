@@ -13,6 +13,7 @@ import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
+import com.example.demo.enums.UserActivity;
 import com.example.demo.repositories.ColorRepository;
 import com.example.demo.repositories.FormatRepository;
 
@@ -70,6 +71,15 @@ public class EnumService {
 			types.add(enumType);
 		}
 		return types;
+	}
+	
+	public List<UserActivity> getActivities() {
+		UserActivity[] activitiesTab = UserActivity.values();
+		List<UserActivity> activities = new ArrayList<>();
+		for (UserActivity enumActivity : activitiesTab) {
+			activities.add(enumActivity);
+		}
+		return activities;
 	}
 
 	

@@ -76,7 +76,7 @@ public class AuthenticationService implements IAuthenticationService {
 	 
 	       if(passwordEncoder.matches(password, userFind.getPassword())) {
 	    	   String jwt = jwtService.generateToken(userFind);
-	    	   return jwt + user.get().getRoles();
+	    	   return jwt;
 	    	}
        }
        	throw new Error("echec de la connexion");

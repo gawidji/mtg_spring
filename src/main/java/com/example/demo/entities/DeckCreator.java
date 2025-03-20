@@ -97,7 +97,8 @@ public class DeckCreator implements UserDetails {
 	//mappé par "user" qui se retrouve dans la classe Deck pour générer une relation bi-directionnelle 
 	// CascadeTpe.all pour que les opérations de la classe User (persist, remove, merge, etc) soient aussi effectués sur la classe Deck
 
-
+	@Column(name = "decksNumber", nullable = true)
+	private Long decksNumber;
 
 	// Transforme les roles de l'utilisateur en grantedAuthorities
 	@Override

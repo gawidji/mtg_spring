@@ -169,6 +169,8 @@ public class DeckService implements IDeckService {
 
 		}
 		
+		
+		
 		return decksReturn;
 	}
 
@@ -272,11 +274,13 @@ public class DeckService implements IDeckService {
 		
 		if(dbuilder != null) {
 			
+			
 			Deck deck = new Deck();
 			deck.setName(deckRegister.getName());
 			deck.setDateCreation(LocalDate.now());
 			deck.setImage(deckRegister.getImage());
 			deck.setFormat(deckRegister.getFormat());
+			deck.setLikeNumber((long) 0);
 			deck.setIsPublic(false);
 			deck.setDeckBuilder(dbuilder);
 			

@@ -15,7 +15,7 @@ public interface IDeckBuilderService {
 	
 	DeckCreator updateAccount(String email, DeckCreator deckBuilder);
 	String deleteDeckBuilder(Long dbID);
-	List<DeckCreator> getDeckBuildersByFilter(String pseudo, String email, List<UserActivity> activities);
+	List<GetDeckBuilder> getDeckBuildersByFilter(String pseudo, String email, List<UserActivity> activities);
 	
 	void likeCard(DeckCreator user, Long cardId);
 	void dislikeCard(DeckCreator user, Long cardId);

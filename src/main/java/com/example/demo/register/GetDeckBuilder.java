@@ -8,6 +8,7 @@ import com.example.demo.entities.Card;
 import com.example.demo.entities.DeckCreator;
 import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumFormat;
+import com.example.demo.enums.UserActivity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
@@ -34,6 +35,8 @@ public class GetDeckBuilder {
 		private String avatar;
 		
 		private String bio;
+		
+		private UserActivity activity;
 
 
 

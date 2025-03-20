@@ -1,8 +1,10 @@
 package com.example.demo.web;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -21,11 +23,15 @@ import com.example.demo.entities.DeckCreator;
 import com.example.demo.entities.Format;
 import com.example.demo.enums.UserActivity;
 import com.example.demo.form.FormCard;
+import com.example.demo.register.GetDeckBuilder;
+import com.example.demo.repositories.DeckBuilderRepository;
 import com.example.demo.services.ColorService;
+import com.example.demo.services.DeckBuilderService;
 import com.example.demo.services.FormatService;
 import com.example.demo.services.IAuthenticationService;
 import com.example.demo.services.ICardService;
 import com.example.demo.services.IDeckBuilderService;
+import com.example.demo.services.IDeckService;
 
 @RestController
 @RequestMapping("f_admin")
@@ -35,6 +41,9 @@ public class AdminController {
 	
 	@Autowired
 	private IDeckBuilderService iAccountService;
+	
+	@Autowired
+	private IDeckService iDeckService;
 	
 	@Autowired
 	private IAuthenticationService iAuthenticationService;
@@ -47,6 +56,11 @@ public class AdminController {
 	
 	@Autowired
 	FormatService formatService;
+	
+	@Autowired
+	DeckBuilderRepository deckBuilderRepository;
+	
+	
 	
 	@PostMapping("addAdmin")
 	public DeckCreator addAdmin(Authentication authentication, @RequestBody DeckCreator db) {
@@ -61,12 +75,49 @@ public class AdminController {
 	
 	@GetMapping("getUsers")
     @PreAuthorize("hasAuthority('ADMIN')")
-	public List <DeckCreator> getDeckBuildersByFilter ( Authentication authentication, @RequestParam(required=false) String pseudo, @RequestParam(required=false) String email,
+	public List <GetDeckBuilder> getDeckBuildersByFilter ( Authentication authentication, @RequestParam(required=false) String pseudo, @RequestParam(required=false) String email,
 	@RequestParam(required=false) List<UserActivity> activities) {
 		return iAccountService.getDeckBuildersByFilter(pseudo, email, activities);
 	}
 	
+	@GetMapping("getUsersTest")
+	public List <GetDeckBuilder> getDeckBuildersByFilters ( @RequestParam(required=false) String pseudo, @RequestParam(required=false) String email,
+	@RequestParam(required=false) List<UserActivity> activities) {
+		return iAccountService.getDeckBuildersByFilter(pseudo, email, activities);
+	}
 	
+	@GetMapping("getUser")
+	public ResponseEntity getDeckBuilder(@RequestParam Long userID) {
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findById(userID);
+		
+		if(user.isPresent()) {
+			return ResponseEntity.ok(iAccountService.getDeckBuilder(user.get()));
+		}
+		
+    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User non trouvé");
+
+	}
+	
+	@GetMapping("getDecksOfUser")
+	public ResponseEntity getDecksByUser(@RequestParam Long userID){
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findById(userID);
+		
+		if(user.isPresent()) {
+			return ResponseEntity.ok(iDeckService.getDecksByUser(user.get()));
+		}
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User non trouvé");
+	}
+	
+	
+	@PostMapping("addCardTest")
+	public ResponseEntity addCard(@RequestBody FormCard cardRegister ) {
+		
+		 return ResponseEntity.ok(iCardService.addCardTest(cardRegister) );
+	}
+	
+	/*
 	@PostMapping("addCard")
     @PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity addCard(Authentication authentication, @RequestBody FormCard cardRegister ) {
@@ -74,6 +125,7 @@ public class AdminController {
 		 iCardService.addCard(cardRegister.getCard(), cardRegister.getColors(), cardRegister.getFormats());
 		 return ResponseEntity.ok("Carte ajoutée : " + cardRegister.getCard() );
 	}
+	*/
 	
 	@PutMapping("updateCard")
     @PreAuthorize("hasAuthority('ADMIN')")

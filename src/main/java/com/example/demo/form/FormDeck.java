@@ -2,6 +2,8 @@ package com.example.demo.form;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.demo.entities.Color;
 import com.example.demo.entities.Deck;
 import com.example.demo.enums.EnumColor;

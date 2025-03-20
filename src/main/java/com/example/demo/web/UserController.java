@@ -77,17 +77,13 @@ public class UserController {
 	public DeckCreator updateAccount(@RequestParam String email, @RequestBody DeckCreator deckBuilder) {
 		return deckBuilderService.updateAccount(email, deckBuilder);
 	}
-	// Nécessite une atuh par token pour que email soit celui de l'user connecté
+	// Nécessite une auth par token pour que email soit celui de l'user connecté
 	
 	@DeleteMapping("deleteAccount")
 	public String deleteAccount(@RequestParam Long dbID) {
 		return deckBuilderService.deleteDeckBuilder(dbID);
 	}
 	// Appel de deleteDeckBuilder mais doit nécessité une auth par token pour que le dbID soit celui de l'user connecté
-	
-	
-	
-	
 	
 	
 	// Liker des objets
@@ -172,6 +168,19 @@ public class UserController {
 	public ResponseEntity addDeck( Authentication authentication, @RequestBody FormDeck deckRegister) {
 		
 		Optional <DeckCreator> user = deckBuilderRepository.findByEmail(authentication.getName());
+		
+		if(user.isPresent()) {
+			return ResponseEntity.ok(iDeckService.addDeckWithForm(user.get(), deckRegister));
+		}
+		
+    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec de l'authentification");
+
+	}
+	
+	@PostMapping("addDeckTest")
+	public ResponseEntity addDeck( @RequestBody FormDeck deckRegister) {
+		
+		Optional <DeckCreator> user = deckBuilderRepository.findById((long) 1);
 		
 		if(user.isPresent()) {
 			return ResponseEntity.ok(iDeckService.addDeckWithForm(user.get(), deckRegister));

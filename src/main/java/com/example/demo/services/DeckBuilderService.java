@@ -55,7 +55,8 @@ public class DeckBuilderService implements IDeckBuilderService, UserDetailsServi
 			getDeckBuilder.setEmail(deckbuilderFind.getEmail());
 			getDeckBuilder.setPassword(deckbuilderFind.getPassword());
 			getDeckBuilder.setAvatar(deckbuilderFind.getAvatar());
-			getDeckBuilder.setBio(deckbuilderFind.getBio());		
+			getDeckBuilder.setBio(deckbuilderFind.getBio());
+			getDeckBuilder.setActivity(deckbuilderFind.getActivity());
 			return getDeckBuilder;
 		}
 		throw new RuntimeException("Utilisateur non trouvé");
@@ -220,8 +221,26 @@ public class DeckBuilderService implements IDeckBuilderService, UserDetailsServi
 	}
 
 	@Override
-	public List<DeckCreator> getDeckBuildersByFilter (String pseudo, String email, List<UserActivity> activities) {
-		return deckBuilderRepository.findByOptionalAttribute(pseudo, email, activities) ;
+	public List<GetDeckBuilder> getDeckBuildersByFilter (String pseudo, String email, List<UserActivity> activities) {
+		
+		List<DeckCreator> deckBuilders = deckBuilderRepository.findByOptionalAttribute(pseudo, email, activities) ;
+		List<GetDeckBuilder> getDeckBuilders = new ArrayList<>();
+		
+		for (DeckCreator deckBuilder : deckBuilders) {
+			GetDeckBuilder getDeckBuilder = new GetDeckBuilder();
+			getDeckBuilder.setId(deckBuilder.getId());
+			getDeckBuilder.setPseudo(deckBuilder.getPseudo());
+			getDeckBuilder.setEmail(deckBuilder.getEmail());
+			getDeckBuilder.setPassword(deckBuilder.getPassword());
+			getDeckBuilder.setAvatar(deckBuilder.getAvatar());
+			getDeckBuilder.setBio(deckBuilder.getBio());
+			getDeckBuilder.setActivity(deckBuilder.getActivity());
+			
+			getDeckBuilders.add(getDeckBuilder);
+			
+		}
+		
+		return getDeckBuilders ;
 	}
 	
 	

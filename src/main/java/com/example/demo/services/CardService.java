@@ -17,6 +17,7 @@ import com.example.demo.enums.EnumColor;
 import com.example.demo.enums.EnumEdition;
 import com.example.demo.enums.EnumFormat;
 import com.example.demo.enums.EnumRarity;
+import com.example.demo.form.FormCard;
 import com.example.demo.register.GetCard;
 import com.example.demo.repositories.CardRepository;
 import com.example.demo.repositories.ColorRepository;
@@ -235,6 +236,7 @@ public class CardService implements ICardService {
 	}
 	
 	
+	
 	@Override
 	public List<Card> findByFormats(List<EnumFormat> formats) {
 		
@@ -246,6 +248,68 @@ public class CardService implements ICardService {
 		}
 		
 		return cardRepository.findByFormatsIn(formatsFind);
+	}
+	
+	
+	
+	@Override
+	public List<GetCard> getCardsForDeck (Long DeckID, String name,  Long manaCostMin, Long manaCostMax, 
+			Float valueMin,	Float valueMax, List<EnumColor> colorFilter, 
+			List<CardType> types, String legendary, List<EnumRarity> rarities, List<EnumEdition> editions) {
+		
+		// Retrouve le deck 
+		Optional<Deck> deck = deckRepository.findById(DeckID);
+		
+		// Récupère les couleurs et le format du deck
+		List<Color> deckColorsEntities = new ArrayList<>();
+		List<Format> deckFormatEntities = new ArrayList<>();
+		if(deck.isPresent()) {
+		for (Color color : deck.get().getColors()) {	
+				deckColorsEntities.add(color);
+			}
+		EnumFormat deckFormat = deck.get().getFormat();
+		Format deckFormatEntity = formatRepository.findByName(deckFormat);
+	    deckFormatEntities.add(deckFormatEntity); 
+		}
+			
+		
+		// Convertit les EnumColor du filtre color (le filtre peut s'ajouter au premier filtre effectué avec les couleurs du deck)
+		List<Color> colorsEntities = new ArrayList<>();	
+		if(colorFilter != null) {
+			for (EnumColor color : colorFilter) {	
+				colorsEntities.add(colorRepository.findByName(color));
+			}
+		}
+		else {
+			colorsEntities = null;
+		}
+		
+			
+		
+		List<Card> cards = cardRepository.findForDeck(name, manaCostMin, manaCostMax, valueMin, valueMax, types,
+				legendary, rarities, editions, colorsEntities, deckColorsEntities, deckFormatEntities);
+		
+		List<GetCard> cardsReturn = new ArrayList<>();
+		
+		for (Card card : cards) {
+			GetCard testCard = new GetCard();
+			testCard.setId(card.getId());
+			testCard.setName(card.getName());
+			testCard.setImage(card.getImage());
+			testCard.setText(card.getText());
+			testCard.setType(card.getType());
+			
+			for (Color color : card.getColors()) {
+				testCard.getColors().add(color.getName());
+			}	
+			for (Format format : card.getFormats()) {
+				testCard.getFormats().add(format.getName());
+			}	
+			cardsReturn.add(testCard);
+		}
+		
+		return cardsReturn;
+
 	}
 	
 	
@@ -265,6 +329,34 @@ public class CardService implements ICardService {
 		}
 				
 		return cardRepository.save(card);
+	}
+	
+	
+	@Override
+	public Card addCardTest(FormCard cardRegister) {
+		
+		List <Color> colors = new ArrayList<>();
+		List <Format> formats = new ArrayList<>();
+		
+		for (EnumColor enumColor : cardRegister.getColors()) {
+			Color color = colorRepository.findByName(enumColor);
+			colors.add(color);		
+		}
+		
+		for (EnumFormat enumFormat : cardRegister.getFormats()) {
+			Format format = formatRepository.findByName(enumFormat);
+			formats.add(format);		
+		}
+		
+		
+		Card card = Card.builder().name(cardRegister.getName()).text(cardRegister.getText()).image(cardRegister.getImage())
+					.manaCost(cardRegister.getManaCost()).value(cardRegister.getValue()).colors(colors).formats(formats)
+					.type(cardRegister.getType()).legendary(cardRegister.getLegendary()).rarity(cardRegister.getRarity())
+					.edition(cardRegister.getEdition()).likeNumber((long) 0).deckNumber((long) 0).commanderNumber((long) 0)
+					.build();
+		
+		return cardRepository.save(card);
+		
 	}
 	
 	
